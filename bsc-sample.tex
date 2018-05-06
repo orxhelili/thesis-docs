@@ -1,0 +1,442 @@
+\documentclass[a4paper,11pt,oneside]{article}
+
+% To use this template, you have to have a halfway complete LaTeX
+% installation and you have to run pdflatex, followed by bibtex,
+% following by one-two more pdflatex runs.
+%
+% Note thad usimg a spel chequer (e.g. ispell, aspell) is generolz
+% a very guud ideo.
+
+\usepackage[a4paper,top=3cm,bottom=3cm,left=3cm,right=3cm]{geometry}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage{helvet}
+\usepackage{parskip}		%% blank lines between paragraphs, no indent
+\usepackage[pdftex]{graphicx}	%% include graphics, preferrably pdf
+\usepackage[pdftex]{hyperref}	%% many PDF options can be set here
+\pdfadjustspacing=1		%% force LaTeX-like character spacing
+
+\newcommand{\myname}{Orgest Xhelili}
+\newcommand{\mytitle}{Automatic Music Genre Classification using Ensemble Learning}
+\newcommand{\mysupervisor}{Prof.~Dr.~Herbert~Jaeger}
+\newtheorem{prop}{Proposition}
+
+\hypersetup{
+pdfauthor = {\myname},
+pdftitle = {\mytitle},
+pdfkeywords = {},
+colorlinks = {true},
+linkcolor = {blue}
+}
+
+\begin{document}
+\pagenumbering{roman}
+
+\thispagestyle{empty}
+
+\begin{flushright}
+\includegraphics[scale=0.7]{bsc-logo}
+\end{flushright}
+\vspace{20mm}
+\begin{center}
+\huge
+\textbf{\mytitle}
+\end{center}
+\vspace*{4mm}
+\begin{center}
+ \Large by
+\end{center}
+\vspace*{4mm}
+\begin{center}
+\Large
+\textbf{\myname}
+\end{center}
+\vspace*{20mm}
+\begin{center}
+\large
+Bachelor Thesis in Computer Science
+\end{center}
+\vfill
+\begin{flushright}
+\large
+\begin{tabular}{l}
+\mysupervisor \\
+\hline
+Bachelor Thesis Supervisor \\
+\\
+\end{tabular}
+\end{flushright}
+\vspace*{8mm}
+\begin{flushleft}
+\large
+Date of Submission: \today \\
+\rule{\textwidth}{1pt}
+\end{flushleft}
+\begin{center}
+\Large Jacobs University --- Focus Area Mobility
+\end{center}
+
+\newpage
+\thispagestyle{empty}
+
+With my signature, I certify that this thesis has been written by me
+using only the indicates resources and materials. Where I have
+presented data and results, the data and results are complete,
+genuine, and have been obtained by me unless otherwise acknowledged;
+where my results derive from computer programs, these computer
+programs have been written by me unless otherwise acknowledged. I
+further confirm that this thesis has not been submitted, either in
+part or as a whole, for any other academic degree at this or another
+institution.
+
+\vspace{20mm}
+
+Signature \hfill Place, Date
+
+\newpage
+
+\section*{Abstract}
+
+Organizing music libraries and databases requires automatic classification of music.
+Music genres are essential descriptors created by humans to label pieces of music.
+This paper presents a novel approach of ensemble learning for solving the problem of 
+genre classification. Ensemble learning is a machine learning paradigm where multiple 
+models are trained to solve the same problem and the final result is a combination 
+of the individual results by each model. Our system consists of three different classifiers:
+echo state networks, support vector machines and logistic regression.
+
+Echo state networks (ESNs) provide a supervised learning principle for analyzing and training
+recurrent neural networks (RNNs). They present a more practical approach to the usage of RNNs 
+because of their computational efficiency and simple implementation.\\
+Support vector machines (SVMs) are supervised learning models which can be used for regression
+analysis or classification problems.\\
+Logistic regression is a regression model which performs linear classification by estimating 
+probabilities of each of the outcomes.
+
+
+\newpage
+\tableofcontents
+
+\clearpage
+\pagenumbering{arabic}
+
+\section{Introduction}
+Music genres are labels created by humans to classify pieces of music giving rise to organized music libraries. 
+However, the distinction between genres remains not well defined, as does their definition. 
+Because of the vast amount of musical pieces, automatic genre classification is crucial for
+organizing huge music databases allowing users to find the music they want to. 
+Automatic genre classification is part of automatic music information retrieval where much research 
+has been ongoing in the 21st century. A summary of state of the art automatic music genre 
+classification may be found on this survey \cite{survey1}.
+
+Echo state networks provide an architecture and supervised learning principle for recurrent
+neural networks. They present a practical approach to training RNNs because of their simple implementation 
+and computational efficiency. RNNs represent a large and varied class of computational models that are designed 
+by more or less detailed analogy with biological brain modules. In an RNN numerous abstract neurons (also called units
+or processing elements) are interconnected by likewise abstracted synaptic connections (or links), 
+which enable activations to propagate through the network \cite{LUKO}.
+ESNs differ from classic RNNs because of the usage of a fixed random reservoir
+and the training of only output neurons weights \cite{spedia}. Because there are no cyclic dependencies between the trained readout connections, 
+training an ESN becomes a simple linear regression task \cite{Jaeger78}.
+
+Support vector machines are a set of supervised learning methods used for classification, regression and 
+outliers detection. Given training data labeled in two classes, the SVM algorithm computes an optimal hyperplane to categorize
+new data. Thus a SVM behaves as a non-probabilistic binary linear classifier. However, they can be extended to support multi 
+class classification of non-linearly separable data in a probabilistic setting. 
+To support non-linear classification, SVMs use the so called kernel trick, implicitly mapping their inputs into high-dimensional feature spaces. 
+To support multi class classification, we use the one-vs.-one strategy, reducing a $K$ class classification problem to $K(K-1)/2$ binary classifiers.
+Probabilities can be estimated for binary classification using Platt Scaling \cite{platt1999probabilistic}. For multi class
+classification the probability scores can be estimated by using a pairwise coupling strategy \cite{wu2004probability}.
+It should be noted that the estimation of probabilities is rather an expensive procedure.
+SVMs are widely used nowadays for different machine learning problems because of their effectiveness, versatility and efficiency.
+
+Logistic regression sometimes called the logistic model or logit model, analyzes the relationship between
+multiple independent variables and a categorical dependent variable by estimating probabilities of occurrence
+of an event \cite{park2013introduction}. In its classical form, logistic regression is used as a binary classifier. In this case the 
+dependent variable is dichotomous. When the dependent variable is not dichotomous, a multinomial logistic
+regression can be applied. 
+
+The report is organized as follows. The second section states the motivation of this research
+and describes in more detail the problem of the automatic music genre classification problem.
+The third section gives a more in-depth analysis of ESNs, SVMs and logistic regression.
+The fourth section documents the ensemble learning strategy used to solve the problem of automatic
+music genre classification. This section also gives a summary of the dataset used and the evaluation criteria.
+The fifth section documents the results of our experiment. The last section discusses the results and potential 
+focus areas for future research in the topic.
+\section{Statement and Motivation of Research}
+\subsection{Music Genre Classification}
+The basis of automatic music genre classification is the representation of musical pieces and the extraction
+of feature vectors from the agreed representation. A symbolic representation of musical pieces is rarely available
+so one has to deal with audio samples. This representation presents a good strategy as it places music genre 
+classification problem in the sphere of speech recognition where more research has been done. However, using the
+exact waveform of a musical piece for automatic classification is not feasible, because of the low level information 
+contained in the audio samples. Therefore the first step in automatic genre classification is the extraction of useful 
+features from the audio representation of musical pieces. Much work on extraction of features from music has been 
+devoted to timbral texture features, rhythmic content features and pitch content features \cite{ogihara}.
+\subsection{Audio Features}
+\begin{itemize}
+\item
+Timbral texture features are used to differentiate sounds with the same pitch and loudness from each other. 
+The use of timbral texture features originates from speech recognition \cite{book}. A detailed list of features used to 
+characterize timbre may be found in \cite{peeters2004large}. These features are usually referred to as being low-level as they represent 
+sound on samples of milliseconds. We summarize here the main low-level features used in genre classification problems as given in \cite{survey1}:
+\begin{itemize}
+  \item temporal features: features computed from the audio signal frame (zero-crossing rate and
+   linear prediction coefficients)
+  \item energy features: features that describe the energy content of the signal
+  \item spectral shape features: features that describe the shape of the power spectrum
+      of a signal frame: centroid, spread, skewness, kurtosis, slope, roll-off frequency, Mel-frequency cepstral
+      coefficients (MFCC)
+\end{itemize}
+\item
+Rhythmic content features are the most widely used mid-level features in audio-based music classification \cite{survey2}.
+These features are used to characterize the temporal regularity of a musical piece. A review of automatic rhythm description 
+systems may be found in \cite{gouyon2005review}. Tzanetakis and Cook proposed the calculation of rhythmic content features for genre classification
+by extracting periodic changes from the beat histogram \cite{tzan}. The beat histogram models the distributions 
+of the regularities exhibited in the envelop signal, where rhythmic features can be obtained such as magnitudes 
+and locations of dominant peaks and BPM(beat-per-minute) \cite{survey2}.
+\item
+Pitch content features are another set of important mid-level music features. Pitch is determined by what
+the ear judges to be the most fundamental frequency of the sound \cite{macy2001grove}. However, the perception 
+of pitch is completely subjective which makes pitch not equal to the fundamental frequency. Tzanetakis and Cook proposed
+the calculation of pitch content features by extracting periodic changes from the pitch histogram \cite{tzan}. The
+pitch histogram models the distribution of candidate pitches extracted by all frames \cite{survey2}.
+\end{itemize}
+\subsubsection*{Analysis and Texture Window}
+Most of the low-level features are computed at regular time intervals, over short windows of length 10-100ms.
+These segments, called analysis windows, have to be small enough so that the frequency characteristics
+of the magnitude spectrum are relatively stable \cite{tzan}. However, in order to capture the long term nature 
+of sound "texture", means and variances of the extracted features can be computed over a number of analysis windows.
+This larger window is referred to as a texture window \cite{tzan}. In our system, an analysis window of 100ms and a 
+texture window of 2s is used.
+\subsection{Extracted features}\label{exft}
+This paper uses a variety of low-level features to extract from the audio representation of musical pieces.
+As documented in two surveys for automatic music classification \cite{survey1,survey2}, the low-level
+features (especially MFCCs) give the best results for the problem of genre classification. We provide below
+a description of each of the features used in our experiment.
+\begin{itemize}
+  \item MFCC - 
+  This paper uses Mel-frequency cepstral coefficients (MFCCs) as the most important feature to extract from the audio representation 
+  of musical pieces. MFCCs are a feature set popular in audio processing. MFCCs fall in the category of timbral 
+  texture features that describe the shape of the power spectrum of a signal frame. MFCCs features are based on the 
+  short time Fourier transform (STFT). This feature set is obtained as follows: We first frame the audio signal in 
+  multiple windows. For each frame the logarithm of the amplitude spectrum based on STFT is computed. Usually the 
+  frequencies are divided in 13 bins using Mel-frequency scaling giving rise to 13 coefficients. 
+  However, the usage of 20 coefficients has shown to give better results \cite{ellis}. Therefore we are using 20 
+  MFCCs in this experiment. In the end we apply Discrete Cosine Transform to obtain the feature vectors. 
+  \item Short-time Energy - The short-time energy is the signal energy over a certain audio frame. It is computed as:
+  \begin{equation} 
+    E = \sum_{m=1}^{N} x^2(m)
+  \end{equation} where $E$ represents the energy of the signal $x(m)$ \cite{jalil2013short}.
+  \item Short-time Energy Entropy - This feature can be interpreted as a measure of abrupt changes in the signal energy.
+  It is computed as:
+  \begin{equation}
+    H = - \sum_{t=1}^N E_n[t]\cdot log_2(E_n[t])
+  \end{equation} where $E_n[t]$ is the normalized energy over a sub-frame $t$.
+  \item Zero Crossing Rate - This feature describes the rate at which the signal changes its sign. It is computed as:
+  \begin{equation}
+    zcr = \frac{1}{N}\sum_{t=1}^{N} sign(x_t x_{t-1})
+  \end{equation} where $x$ is a signal of length $N$ ans $sign$ is an indicator function.
+  \item Spectral Centroid - The spectral centroid is defined as the center of gravity of the magnitude spectrum of
+  STFT \cite{tzan}. It is computed as:
+  \begin{equation} \label{eq:3}
+    C_t = \frac{\sum_{n=1}^N M_t[n]\cdot n}{\sum_{n=1}^N M_t[n]}
+  \end{equation} where $M_t[n]$ is the magnitude of STFT at frame $t$ and frequency bin $n$.
+  \item Spectral Spread - The spectral spread is defined as the variance of the magnitude spectrum of STFT.
+  It is computed as:
+  \begin{equation}
+    S_t = \sqrt{\sum_{n=1}^N \frac{(C_t-n)^2\cdot M_t[n]}{M_t[n]}}
+  \end{equation} where $C_t$ and $M_t[n]$ are defined as in equation \ref{eq:3}.
+  \item Spectral Entropy - This feature is similar to Energy Entropy. In contrast the entropy is
+  calculated over sub-frames of the spectrum, not the signal itself.
+  \item Spectral Flux - The spectral flux is defined as the squared difference between the normalized magnitudes
+  of successive spectral distributions \cite{tzan}. It is computed as:
+  \begin{equation}
+    F_t = \sum_{n=1}^N (N_t[n]-N_{t-1}[n])^2
+  \end{equation} where $N_t[n]$ denotes the normalized magnitude of the Fourier 
+  transform at frame $t$ and frequency bin $n$.
+  \item Spectral Rolloff - The spectral rolloff is defined as the frequency $R_t$ below which $85\%$ of the magnitude
+  distribution is concentrated \cite{tzan}. It is computed as:
+  \begin{equation}
+    \sum_{n=1}^{R_t} M_t[n] = 0.85 \cdot \sum_{n=1}^N M_t[n]
+  \end{equation} where $M_t[n]$ is defined as in equation \ref{eq:3}.
+  \item Delta-Cepstral Coefficients - These features serve as the first order derivative of MFCCs and
+   are appended to MFCCs as documented below.\\
+  Given MFCCs $C[n]$ over an analysis window, we calculate the delta features
+  \begin{equation}
+    D[n] = C[n]-C[n-1]
+  \end{equation} where $n$ is the index of the analysis frame. It has been shown that the usage of delta-cepstral
+  coefficients produces better results in the field of speech recognition \cite{kumar2011delta}.
+\end{itemize}
+The extraction of features for the experiment was done using pyAudioAnalysis \cite{giannakopoulos2015pyaudioanalysis}.
+\subsection{Research objectives}
+I state that this guided research does not aim to achieve state of the art solution to the problem of music genre 
+classification. The main objective of the research is to apply a novel ensemble learning approach to this problem, by combining different classifiers. In the end, we provide a comparison of the performances of the different classifiers. 
+\section{Ensemble of Classifiers}
+\subsection{Echo State Networks}
+The following section documents a summary of ESNs as introduced in \cite{spedia,jaeg6,jaeg7}.\\
+Echo state networks provide an architecture and supervised learning principle for recurrent neural networks.
+The main idea is to drive a random, large, fixed recurrent neural network with the input signal, 
+thereby inducing in each neuron within this ”reservoir” network a nonlinear response signal, 
+and combine a desired output signal by a trainable linear combination of all of these response signals \cite{spedia}.
+
+We consider discrete-time neural networks with $K$ input units, $N$ internal network units and $L$ output units. 
+Activations of input units at time step n are K-dimensional vectors $\mathbf{u(n)} = (u_1(n)...u_K(n))^T$, of internal
+units N-dimensional vectors $\mathbf{x(n)} = (x_1(n)...x_N(n))^T$, and of output units L-dimensional vectors 
+$\mathbf{y(n)} = (y_1(n)...y_L(n))^T$. Real-valued connection weights are collected in a $N\times K$ weight matrix 
+$\mathbf{W^{in}}$ for the input weights, in a $N\times N$ matrix $\mathbf{W}$ for the internal connections, and in a 
+$L\times N$ matrix $\mathbf{W^{out}}$ for the connections to the output units. 
+The basic architecture of the network is shown in Figure 1.
+\begin{figure}[h]
+\includegraphics[scale = 0.5]{architecture}
+\centering
+\caption{Architecture of a network with K input units, N internal units and L output units (graphics 
+taken from \cite{jaeg7}).}
+\end{figure}
+
+In this project we are using the version of ESNs with leaky integration as described in \cite{jaeg8}. 
+Using this particular type of the network the activation of internal units follows the equation:
+\begin{equation}\label{esn:1}
+\mathbf{x}(n+1) = (1-\alpha)\mathbf{x}(n) +  \alpha\mathbf{f}(\mathbf{Wx}(n) +\mathbf{W^{in}u}(n+1) + \mathbf{b_N})
+\end{equation}
+where $\mathbf{b_N}$ is a fixed random N dimensional bias vector, $\alpha$ is the leaking rate of the network and $\mathbf{f}=(f_1...f_N)$ are the internal unit's output functions. In our case we will be using $\mathbf{tanh}$ as this function. The output is updated according to the equation:
+\begin{equation}\label{esn:2}
+\mathbf{y}(n+1) = g(\mathbf{W^{out}}\mathbf{x}(n+1)) 
+\end{equation}
+where $\mathbf{g}$ is an output activation function. In our case we will be using the identity function so 
+$\mathbf{g}$ will be ignored. 
+\subsubsection*{Training ESNs}
+In the stage of training, the network is driven by a given teacher input signal 
+$\mathbf{u}(1),...,\mathbf{u}(n_{train})$ which yields a sequence $\mathbf{x}(1),...,\mathbf{x}(n_{train})$ of 
+network states. The obtained network states are collected into a matrix $\mathbf{X}$ of size 
+$N\times (n_{train}-n_0)$, where $n_{train}$ is the training length and $n_0$ is the washout time. 
+Along the teacher input signal, a teacher output signal is provided. The desired outputs $\mathbf{y}(n)$ 
+are sorted row-wise into a teacher output collection matrix $\mathbf{Y_t}$ of size $(n_{train}-n_0)\times L$ \cite{spedia}. 
+Then the output weights $\mathbf{W^{out}}$ are trained using linear regression following the equation:
+\begin{equation}\label{esn:3}
+\mathbf{W^{out}=Y_tX^T(XX^T} + \gamma^2I)^{-1}
+\end{equation}
+where $\gamma^2$ is the regularization coefficient and $I$ is the identity matrix. 
+After training the output weight by linear regression the network is ready for testing.
+\subsubsection*{Achieving Echo States}
+Under certain conditions, the activations state $\mathbf{x}(n)$ of a recurrent neural network are a function of 
+the input history presented to the network \cite{jaeg6}. More precisely there exists an echo function $\mathbf{E}$, 
+such that the activation state of the network is calculated as:
+\begin{equation}
+\mathbf{x}(n) = \mathbf{E}(...,\mathbf{u}(n-1),\mathbf{u}(n))
+\end{equation}
+We give here a proposition from \cite{jaeg6} which gives sufficient conditions for the existence and the 
+non-existence of echo states.
+\begin{prop}
+Assume a sigmoid network with unit output functions $f_i=tanh$. Let the weight matrix $\mathbf{W}$ have its 
+largest singular value $\sigma_{max} <1$. Then the network has echo states for all admissible inputs. 
+Let the weight matrix have a spectral radius $|\lambda_{max}| > 1$, where the spectral radius denotes the \
+eigenvalue of the weight matrix with the largest absolute value. Then this network has no echo states if 
+$\mathbf{u}(n)=0$ is an admissible input sequence.
+\end{prop}
+Note that scaling the weight matrix $\mathbf{W}$ with a scalar $\alpha$ scales the spectral radius and the 
+singular values accordingly. In practice it is enough to achieve echo states if we have a spectral radius 
+marginally smaller than 1. This would be achieved by scaling the matrix $\mathbf{W}$ with $\beta/|\lambda_{max}|$ 
+where $\beta$ is marginally smaller than 1.
+\subsection{Support Vector Machines}
+Support Vector Machines (SVMs) are a popular machine learning method for classification, regression 
+and other learning tasks. The original SVM algorithm was invented by Vladimir N. Vapnik and Alexey Ya. 
+Chervonenkis in 1963. The current standard version was initially proposed by Cortes and Vapnik in 1993 
+and published in 1995 \cite{cortes1995support}. The following sections explain the SVM algorithm as presented 
+in \cite{fletcher2009support,law2006simple,berwick2003idiot}.
+\subsubsection*{Motivation behind SVMs}
+The basic idea of the SVM algorithm is to find an optimal hyperplane for linearly separable data points.
+Given linearly separable training data points $\mathbf{x_i}\in R^n,i=1,....,l$, where each $\mathbf{x_i}$
+belongs in one of the two classes $\mathbf{y_i}=-1$ or $+1$, the SVM algorithm tries to find an optimal hyperplane
+separating the two classes \cite{fletcher2009support}. This hyperplane can be defined formally as:
+\begin{equation}
+  \mathbf{w}\cdot\mathbf{x} + \mathbf{b} = 0
+\end{equation} where $\mathbf{w}$ is a weight vector normal to the hyperplane and $\mathbf{\frac{b}{||w||}}$ 
+is the distance from the hyperplane to the origin. Support vectors are the data points closest to this separating
+hyperplane and the aim of the algorithm is to maximize the distance of the hyperplane to the support
+vectors \cite{law2006simple}. This distance is called the margin of the separating hyperplane.
+
+\subsection{Logistic Regression}
+\subsection{Ensemble Learning}
+\section{Documentation of Methods}
+\subsection{Problem and Dataset Description}
+The experiments are based on the famous standard dataset used by Tzanetakis and Cook \cite{tzan}.
+This dataset consists of 1000 30s long audio files which have been annotated a genre. 
+The audio files cover 10 different genres with 100 files per each genre. The ten represented genres
+are: Blues, Classical, Country, Disco, Hip-hop, Jazz, Metal, Pop, Reggae and Rock.
+
+Given this dataset, we aim to train three different classifiers and apply a 10-fold 
+cross validation scheme to classify the dataset into the given genres. Performance of 
+each classifier is analyzed. In the end we combine the three classifiers by a soft-voting 
+strategy and analyze the performance of the ensemble. 
+\subsection{State of the Art}
+In our context, state of the art refers to the performance of the classifiers applied
+on the dataset that we are using. The following table, taken from \cite{survey2}, compares the performance
+of different algorithms using different type of features. The first results come from the creators
+of the dataset who achieved up to 60\% classification accuracy. The most used classifier are
+support vector machines. The MFCC feature set is used in almost every occasion. Most of the documented 
+classifiers achieve mean classification accuracy in the range of 70-80\%.
+\begin{figure}[h]
+  \includegraphics[scale=0.5]{art}
+  \centering
+  \caption{Performance comparison on the standard dataset}
+\end{figure}
+\subsection{Pre-processing}
+The procedure of feature extraction differs for ESNs and the other two classifiers.
+We feed continuous live data to the network while the features fed to the SVM and logistic regression
+algorithm are 'global' features computed for the whole song. We document below the two different strategies
+used in the pre-processing phase.
+\begin{itemize}
+  \item ESNs - For each audio file, the features described in \ref{exft} are computed for 
+  each analysis window of 100ms long. We are calculating $20$ MFCCs, $20$ delta-cepstral
+  coefficients and $8$ single features. After the feature extraction procedure, each audio file
+  is represented as a matrix $\mathbf{A}$ of size $48\times f$, where $f$ is the number of frames
+  of length 100ms for each audio file. 
+  \item SVMs \& Logistic Regression - The extraction of 'global' features for these two classifiers 
+  is based upon the above procedure for ESNs. We compute the mean and the variance of the $48$
+  aforementioned features (calculated for each analysis window) over each texture window of 2s.
+  Therefore, $96$ features are computed for each texture window. In the next step, the mean of these
+  features is computed over the whole song segment, providing a global feature set of size $96$.
+  In the end, we append to this feature set the covariance matrix of the $20$ MFCCs
+  calculated over each analysis window. The usage of the covariance matrix of MFCCs led to better results
+  using SVMs as a classifier [To-Add]. Finally, we have computed for each song a feature set of size $496$ which
+  is fed to both the SVM and logistic regression algorithms.
+\end{itemize}
+\subsection{Cross Validation of Parameters}
+A 10-fold cross validation is used to determine the parameters of the classifiers 
+that achieve the best performance. The dataset is divided in 10 random smaller sets of 
+100 audio files each. Each of these subsets is used iteratively as a validation set, while
+the remaining data is used for training each of the classifiers. For each classifier configuration,
+the mean classification accuracy over the 10 validation sets is computed and the configurations with 
+the highest accuracy are chosen as the optimal ones. After the parameters of each classifier are 
+decided, the weights of each classifier in the ensemble system are decided in the same fashion.
+\subsection{ESN Procedure}
+The feature set fed to the network is of size $48$ so our network consists of $K=48$
+input units. We are using the network to classify each musical piece into one of the 10 genres.
+Therefore, the network will $L=10$ output units.
+\subsubsection{Constructing the network}
+Weight matrices $\mathbf{W^{in},\ W}$ and the bias vector $\mathbf{b_N}$ are randomly initialized with real numbers
+in the interval $[-0.5,0.5]$. The spectral radius $\lambda_{max}$ of the weight matrix $\mathbf{W}$ is computed 
+and we scale the matrix with the inverse of this factor. After this operation, $\mathbf{W}$ will have a spectral 
+radius of 1.
+\subsubsection{Training the Network}
+For each run, the network is trained using the state update equation \ref{esn:1}. For each musical piece, 
+we ignore the first 30 frames from its matrix representation $\mathbf{A}$. Upon starting training a new musical 
+piece the network state is initialized to $0$. The system states are collected in a matrix $\mathbf{X}$ of size 
+$N\times (n_{train}-n_0)$. In our case $n_{train} = 900\cdot f$ and $n_0 = 900\cdot 30$, where $f$ is the number of 
+frames for each musical piece. The output teacher matrix $\mathbf{Yt}$ will be of size $L\times (n_{train}-n_0)$. 
+Each column vector of $\mathbf{Yt}$ consists of zeros and a $1$ on the right genre. By using the equation \ref{esn:3} 
+the output weights matrix $\mathbf{W^{out}}$ is computed.
+\subsubsection{Testing the network}
+Using state update equations \ref{esn:1} and \ref{esn:2}, the network is tested on each validation set.
+For each musical piece in the validation set, the computed output vectors are saved in a matrix of size 
+$L\times (f-30)$. The mean of this matrix over each row is computed resulting in a $L$ dimensional vector. 
+The index of the highest value is chosen as the predicted genre. For each run we compute the classification accuracy
+by dividing the number of correct predictions by 100.
+
+
+\nocite{*}
+\newpage
+\bibliographystyle{unsrt}
+\bibliography{bsc-sample}
+
+\end{document}
