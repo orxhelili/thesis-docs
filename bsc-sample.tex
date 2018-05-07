@@ -6,7 +6,7 @@
 %
 % Note thad usimg a spel chequer (e.g. ispell, aspell) is generolz
 % a very guud ideo.
-
+\usepackage{amsmath}
 \usepackage[a4paper,top=3cm,bottom=3cm,left=3cm,right=3cm]{geometry}
 \renewcommand{\familydefault}{\sfdefault}
 \usepackage{helvet}
@@ -14,7 +14,7 @@
 \usepackage[pdftex]{graphicx}	%% include graphics, preferrably pdf
 \usepackage[pdftex]{hyperref}	%% many PDF options can be set here
 \pdfadjustspacing=1		%% force LaTeX-like character spacing
-
+\usepackage{float}
 \newcommand{\myname}{Orgest Xhelili}
 \newcommand{\mytitle}{Automatic Music Genre Classification using Ensemble Learning}
 \newcommand{\mysupervisor}{Prof.~Dr.~Herbert~Jaeger}
@@ -286,7 +286,7 @@ $\mathbf{y(n)} = (y_1(n)...y_L(n))^T$. Real-valued connection weights are collec
 $\mathbf{W^{in}}$ for the input weights, in a $N\times N$ matrix $\mathbf{W}$ for the internal connections, and in a 
 $L\times N$ matrix $\mathbf{W^{out}}$ for the connections to the output units. 
 The basic architecture of the network is shown in Figure 1.
-\begin{figure}[h]
+\begin{figure}[H]
 \includegraphics[scale = 0.5]{architecture}
 \centering
 \caption{Architecture of a network with K input units, N internal units and L output units (graphics 
@@ -345,15 +345,105 @@ and published in 1995 \cite{cortes1995support}. The following sections explain t
 in \cite{fletcher2009support,law2006simple,berwick2003idiot}.
 \subsubsection*{Motivation behind SVMs}
 The basic idea of the SVM algorithm is to find an optimal hyperplane for linearly separable data points.
-Given linearly separable training data points $\mathbf{x_i}\in R^n,i=1,....,l$, where each $\mathbf{x_i}$
-belongs in one of the two classes $\mathbf{y_i}=-1$ or $+1$, the SVM algorithm tries to find an optimal hyperplane
+Given linearly separable training data points $\mathbf{x}_i\in R^n,i=1,....,n$, where each $\mathbf{x}_i$
+belongs in one of the two classes $\mathbf{y}_i=-1$ or $+1$, the SVM algorithm tries to find an optimal hyperplane
 separating the two classes \cite{fletcher2009support}. This hyperplane can be defined formally as:
 \begin{equation}
   \mathbf{w}\cdot\mathbf{x} + \mathbf{b} = 0
-\end{equation} where $\mathbf{w}$ is a weight vector normal to the hyperplane and $\mathbf{\frac{b}{||w||}}$ 
-is the distance from the hyperplane to the origin. Support vectors are the data points closest to this separating
+\end{equation} where $\mathbf{w}$ is a weight vector normal to the hyperplane and $\mathbf{b}$ is a bias vector.
+Support vectors are the data points closest to this separating
 hyperplane and the aim of the algorithm is to maximize the distance of the hyperplane to the support
 vectors \cite{law2006simple}. This distance is called the margin of the separating hyperplane.
+
+\begin{figure}[H]
+  \includegraphics[scale=0.3]{hyperplane}
+  \centering
+  \caption{Hyperplane through two linearly separable classes (graphics taken from \cite{fletcher2009support}).}
+\end{figure}
+The figure above shows the optimal hyperplane through two linearly separable classes. 
+$H_1$ and $H_2$ denote the planes on which the support vectors lie on. 
+The margin of the hyperplane is $m = |d_1|+|d_2|$. Referring to this figure, implementing the SVM boils down to selecting
+variables $\mathbf{w}$ and $\mathbf{b}$ such that:
+\begin{equation}\label{svm1}
+  \mathbf{x}_i\cdot\mathbf{w}+\mathbf{b}\geq +1 \quad \forall \mathbf{y}_i = +1
+\end{equation}
+\begin{equation}\label{svm2}
+  \mathbf{x}_i\cdot\mathbf{w}+\mathbf{b}\leq -1 \quad \forall \mathbf{y}_i = -1
+\end{equation}
+The equations can be combined into:
+\begin{equation}\label{svm3}
+  \mathbf{y}_i(\mathbf{x}_i\cdot\mathbf{w}+\mathbf{b}) - 1 \geq 0 \quad \forall i
+\end{equation}
+As we said earlier the SVM algorithm aims to maximize the margin $m$. Simple vector geometry
+shows that $m = \frac{2}{||\mathbf{w}||}$ \cite{fletcher2009support}. Maximizing $m$ is equivalent to minimizing
+$\frac{1}{2}||\mathbf{w}||^2$, which leads to solving the following constrained optimization problem:
+\begin{equation}\label{primal}
+  min \ \frac{1}{2}||\mathbf{w}||^2 \quad s.t. \quad  \mathbf{y}_i(\mathbf{x}_i\cdot\mathbf{w}+\mathbf{b}) - 1 \geq 0 \quad \forall i
+\end{equation}
+The solution to this problem and the mathematical formalism behind it are documented in \cite{law2006simple}.
+We ignore the step by step solution and present just the result. The original problem \ref{primal}, known as the primal problem,
+is equivalent to the following dual problem \cite{law2006simple}:
+\begin{equation}
+  max \ W(\mathbf{\alpha}) = \sum_{i=1}^n \alpha_i - \frac{1}{2} \sum_{i=1,j=1}^n \alpha_i \alpha_j \mathbf{y}_i\mathbf{y}_j\mathbf{x}_i\mathbf{x}_j
+  \quad s.t \quad \alpha_i \geq 0,\ \sum_{i=1}^n \alpha_i\mathbf{y}_i = 0
+\end{equation}
+This is a quadratic programming problem and a solution $\alpha=(\alpha_i)$ can be found using different approaches.
+For SVM, sequential minimal optimization seems to be the most popular \cite{law2006simple}. A nice characteristic 
+of the solution is that many of the $\alpha_i$ are $0$ and the $\mathbf{x}_i$ with non-zero $\alpha_i$ are the support 
+vectors. Therefore we can construct $\mathbf{w}$ as a linear combination of a small number of data points \cite{law2006simple}:
+\begin{equation}\label{svm4}
+  \mathbf{w} = \sum_{j=1}^s \alpha_{t_j}\mathbf{y}_{t_j}\mathbf{x}_{t_j}
+\end{equation}
+where $t_j(j=1,...,s)$ are the indices of the $s$ support vectors.
+After the optimal hyperplane is computed, the SVM classifier can categorize new data $\mathbf{z}$ by looking at the sign of the expression:
+\begin{equation}
+  f = \mathbf{w}\cdot\mathbf{z}+\mathbf{b}
+\end{equation} and categorize it as class $1$ if the $f$ is positive and class $-1$ otherwise.
+\subsubsection*{Extension to non-linearly separable data}
+In order to extend the SVM methodology to handle data that is not fully linearly separable, we relax 
+the constraints \ref{svm1} and \ref{svm2} to allow for misclassified points \cite{fletcher2009support}. This is done by introducing
+positive slack variables $\xi_i$, $i=1,....,n$ and the new equations can be combined into:
+\begin{equation}
+  \mathbf{y}_i(\mathbf{x}_i\cdot\mathbf{w}+\mathbf{b}) - 1 + \xi_i\geq 0 \quad \text{where} \quad \xi_i\geq 0\ \forall i
+\end{equation}
+\begin{figure}[H]
+  \includegraphics[scale=0.3]{nonlinear}
+  \centering
+  \caption{Hyperplane through two non-linearly separable classes (graphics taken from \cite{fletcher2009support}).}
+\end{figure}
+In this SVM version, data points on the incorrect side of the margin boundary have a penalty that increases with the distance
+from it. The correctly classified data points have $\xi_i=0$. As we are trying to reduce the number of misclassifications,
+we adapt the previous objective function \ref{primal} in the following way:
+\begin{equation}
+  min \ \frac{1}{2}||\mathbf{w}||^2+C\sum_{i=1}^n\xi_i\quad s.t. \quad \mathbf{y}_i(\mathbf{x}_i\cdot\mathbf{w}+\mathbf{b}) - 1 + \xi_i\geq 0 \ \forall i
+\end{equation}
+where the parameter $C$ controls the trade-off between the slack variable penalty and the size of the margin.
+The new constrained optimization problem can be solved in the same way as in the linear separable case, except
+there is an upper bound $C$ on $\alpha_i$ now \cite{law2006simple}. The dual problem in this case is:
+\begin{equation}
+  max \ W(\mathbf{\alpha}) = \sum_{i=1}^n \alpha_i - \frac{1}{2} \sum_{i=1,j=1}^n \alpha_i \alpha_j \mathbf{y}_i\mathbf{y}_j\mathbf{x}_i\mathbf{x}_j
+  \quad s.t \quad C\geq\alpha_i \geq 0,\ \sum_{i=1}^n \alpha_i\mathbf{y}_i = 0
+\end{equation}
+The weight vector $\mathbf{w}$ can be constructed in the same way as in the linearly separable case.
+\subsubsection*{Extension to non-linear decision boundary}
+Many datasets cannot be separated by a linear hyperplane. The idea is to transform these data points
+into a higher dimensional feature space which is linearly separable. After the transformation, the SVM algorithm can be applied to the transformed data points.
+Computation in this new space can be quite costly but this is not a problem for the SVM, since we only calculate the inner product 
+of the data points. As long as we can calculate the inner product in the feature space, we do not need the mapping explicitly \cite{law2006simple}.
+This is the so called kernel trick. We define the kernel function $K$:
+\begin{equation}
+  K(\mathbf{x}_i,\mathbf{x}_j) = \phi(\mathbf{x}_i)\phi(\mathbf{x}_j)
+\end{equation} where $\phi(\mathbf{x})$ is a map which transforms the data points into the linearly separable feature space.
+For the linear decision boundary case, $\phi$ is the identity function. The dual problem in the case of non-linearly decision boundary
+transforms to:
+\begin{equation}
+  max \ W(\mathbf{\alpha}) = \sum_{i=1}^n \alpha_i - \frac{1}{2} \sum_{i=1,j=1}^n \alpha_i \alpha_j \mathbf{y}_i\mathbf{y}_jK(\mathbf{x}_i,\mathbf{x}_j)
+  \quad s.t \quad C\geq\alpha_i \geq 0,\ \sum_{i=1}^n \alpha_i\mathbf{y}_i = 0
+\end{equation}
+The new data $\mathbf{z}$ can be categorized by looking at the sign of the expression:
+\begin{equation}
+  f = \mathbf{w}\mathbf{\phi(z)}+\mathbf{b} = \sum_{j=1}^s \alpha_{t_j}\mathbf{y}_{t_j}K(\mathbf{x}_{t_j},\mathbf{x})+\mathbf{b} 
+\end{equation} where $t_j$ is defined as in \ref{svm4}.
 
 \subsection{Logistic Regression}
 \subsection{Ensemble Learning}
@@ -375,7 +465,7 @@ of different algorithms using different type of features. The first results come
 of the dataset who achieved up to 60\% classification accuracy. The most used classifier are
 support vector machines. The MFCC feature set is used in almost every occasion. Most of the documented 
 classifiers achieve mean classification accuracy in the range of 70-80\%.
-\begin{figure}[h]
+\begin{figure}[H]
   \includegraphics[scale=0.5]{art}
   \centering
   \caption{Performance comparison on the standard dataset}
@@ -413,12 +503,12 @@ decided, the weights of each classifier in the ensemble system are decided in th
 The feature set fed to the network is of size $48$ so our network consists of $K=48$
 input units. We are using the network to classify each musical piece into one of the 10 genres.
 Therefore, the network will $L=10$ output units.
-\subsubsection{Constructing the network}
+\subsubsection*{Constructing the network}
 Weight matrices $\mathbf{W^{in},\ W}$ and the bias vector $\mathbf{b_N}$ are randomly initialized with real numbers
 in the interval $[-0.5,0.5]$. The spectral radius $\lambda_{max}$ of the weight matrix $\mathbf{W}$ is computed 
 and we scale the matrix with the inverse of this factor. After this operation, $\mathbf{W}$ will have a spectral 
 radius of 1.
-\subsubsection{Training the Network}
+\subsubsection*{Training the Network}
 For each run, the network is trained using the state update equation \ref{esn:1}. For each musical piece, 
 we ignore the first 30 frames from its matrix representation $\mathbf{A}$. Upon starting training a new musical 
 piece the network state is initialized to $0$. The system states are collected in a matrix $\mathbf{X}$ of size 
@@ -426,7 +516,7 @@ $N\times (n_{train}-n_0)$. In our case $n_{train} = 900\cdot f$ and $n_0 = 900\c
 frames for each musical piece. The output teacher matrix $\mathbf{Yt}$ will be of size $L\times (n_{train}-n_0)$. 
 Each column vector of $\mathbf{Yt}$ consists of zeros and a $1$ on the right genre. By using the equation \ref{esn:3} 
 the output weights matrix $\mathbf{W^{out}}$ is computed.
-\subsubsection{Testing the network}
+\subsubsection*{Testing the network}
 Using state update equations \ref{esn:1} and \ref{esn:2}, the network is tested on each validation set.
 For each musical piece in the validation set, the computed output vectors are saved in a matrix of size 
 $L\times (f-30)$. The mean of this matrix over each row is computed resulting in a $L$ dimensional vector. 
