@@ -159,8 +159,8 @@ The report is organized as follows. The second section states the motivation of 
 and describes in more detail the problem of the automatic music genre classification problem.
 The third section gives a more in-depth analysis of ESNs, SVMs and logistic regression.
 The fourth section documents the ensemble learning strategy used to solve the problem of automatic
-music genre classification. This section also gives a summary of the dataset used and the evaluation criteria.
-The fifth section documents the results of our experiment. The last section discusses the results and potential 
+music genre classification. This section also gives a summary of the state of the art and the dataset used.
+The fifth section documents the evaluation criteria and the results of our experiment. The last section discusses the results and potential 
 focus areas for future research in the topic.
 \section{Statement and Motivation of Research}
 \subsection{Music Genre Classification}
@@ -208,7 +208,7 @@ of the magnitude spectrum are relatively stable \cite{tzan}. However, in order t
 of sound "texture", means and variances of the extracted features can be computed over a number of analysis windows.
 This larger window is referred to as a texture window \cite{tzan}. In our system, an analysis window of 100ms and a 
 texture window of 2s is used.
-\subsection{Extracted features}\label{exft}
+\subsection{Extracted Features}\label{exft}
 This paper uses a variety of low-level features to extract from the audio representation of musical pieces.
 As documented in two surveys for automatic music classification \cite{survey1,survey2}, the low-level
 features (especially MFCCs) give the best results for the problem of genre classification. We provide below
@@ -268,7 +268,7 @@ a description of each of the features used in our experiment.
   coefficients produces better results in the field of speech recognition \cite{kumar2011delta}.
 \end{itemize}
 The extraction of features for the experiment was done using pyAudioAnalysis \cite{giannakopoulos2015pyaudioanalysis}.
-\subsection{Research objectives}
+\subsection{Research Objectives}
 I state that this guided research does not aim to achieve state of the art solution to the problem of music genre 
 classification. The main objective of the research is to apply a novel ensemble learning approach to this problem, by combining different classifiers. In the end, we provide a comparison of the performances of the different classifiers. 
 \section{Ensemble of Classifiers}
@@ -337,7 +337,7 @@ Note that scaling the weight matrix $\mathbf{W}$ with a scalar $\alpha$ scales t
 singular values accordingly. In practice it is enough to achieve echo states if we have a spectral radius 
 marginally smaller than 1. This would be achieved by scaling the matrix $\mathbf{W}$ with $\beta/|\lambda_{max}|$ 
 where $\beta$ is marginally smaller than 1.
-\subsection{Support Vector Machines}
+\subsection{Support Vector Machines}\label{svms}
 Support Vector Machines (SVMs) are a popular machine learning method for classification, regression 
 and other learning tasks. The original SVM algorithm was invented by Vladimir N. Vapnik and Alexey Ya. 
 Chervonenkis in 1963. The current standard version was initially proposed by Cortes and Vapnik in 1993 
@@ -399,7 +399,7 @@ After the optimal hyperplane is computed, the SVM classifier can categorize new 
 \begin{equation}
   f = \mathbf{w}\cdot\mathbf{z}+\mathbf{b}
 \end{equation} and categorize it as class $1$ if the $f$ is positive and class $-1$ otherwise.
-\subsubsection*{Extension to non-linearly separable data}
+\subsubsection*{Extension to non-linearly Separable Data}
 In order to extend the SVM methodology to handle data that is not fully linearly separable, we relax 
 the constraints \ref{svm1} and \ref{svm2} to allow for misclassified points \cite{fletcher2009support}. This is done by introducing
 positive slack variables $\xi_i$, $i=1,....,n$ and the new equations can be combined into:
@@ -425,7 +425,7 @@ there is an upper bound $C$ on $\alpha_i$ now \cite{law2006simple}. The dual pro
   \quad s.t \quad C\geq\alpha_i \geq 0,\ \sum_{i=1}^n \alpha_i\mathbf{y}_i = 0
 \end{equation}
 The weight vector $\mathbf{w}$ can be constructed in the same way as in the linearly separable case.
-\subsubsection*{Extension to non-linear decision boundary}
+\subsubsection*{Extension to non-linear Decision Boundary}
 Many datasets cannot be separated by a linear hyperplane. The idea is to transform these data points
 into a higher dimensional feature space which is linearly separable. After the transformation, the SVM algorithm can be applied to the transformed data points.
 Computation in this new space can be quite costly but this is not a problem for the SVM, since we only calculate the inner product 
@@ -436,15 +436,65 @@ This is the so called kernel trick. We define the kernel function $K$:
 \end{equation} where $\phi(\mathbf{x})$ is a map which transforms the data points into the linearly separable feature space.
 For the linear decision boundary case, $\phi$ is the identity function. The dual problem in the case of non-linearly decision boundary
 transforms to:
-\begin{equation}
+\begin{equation}\label{svm5}
   max \ W(\mathbf{\alpha}) = \sum_{i=1}^n \alpha_i - \frac{1}{2} \sum_{i=1,j=1}^n \alpha_i \alpha_j \mathbf{y}_i\mathbf{y}_jK(\mathbf{x}_i,\mathbf{x}_j)
   \quad s.t \quad C\geq\alpha_i \geq 0,\ \sum_{i=1}^n \alpha_i\mathbf{y}_i = 0
 \end{equation}
 The new data $\mathbf{z}$ can be categorized by looking at the sign of the expression:
-\begin{equation}
-  f = \mathbf{w}\mathbf{\phi(z)}+\mathbf{b} = \sum_{j=1}^s \alpha_{t_j}\mathbf{y}_{t_j}K(\mathbf{x}_{t_j},\mathbf{x})+\mathbf{b} 
+\begin{equation}\label{svm6}
+  f = \mathbf{w}\mathbf{\phi(z)}+\mathbf{b} = \sum_{j=1}^s \alpha_{t_j}\mathbf{y}_{t_j}K(\mathbf{x}_{t_j},\mathbf{z})+\mathbf{b} 
 \end{equation} where $t_j$ is defined as in \ref{svm4}.
+The kernel function, being an inner product, can be viewed as measure of similarity between two data points.
+We present here 3 popular examples of kernel functions:
+\begin{itemize}
+  \item Polynomial kernel function with degree $d$:
+  \begin{math}
+    K(\mathbf{x},\mathbf{y}) = (\mathbf{x}\mathbf{y} + 1)^d
+  \end{math}
+  \item Radial basis function with width $\sigma$:
+  \begin{math}
+    K(\mathbf{x},\mathbf{y}) = e^{\frac{-||\mathbf{x}-\mathbf{y}||^2}{2\sigma^2}}
+  \end{math}
+  \item Sigmoid function with parameters $\kappa$ and $\theta$: 
+  \begin{math}
+    K(\mathbf{x},\mathbf{y}) = tanh(\kappa \mathbf{x} \mathbf{y}+\theta)
+  \end{math}
+\end{itemize}
 
+In conclusion, training a SVM includes selecting a kernel function, choosing the kernel parameters and the value of $C$ and
+solving a quadratic programming problem.
+\subsubsection*{Multi-class Classification}
+By their design SVMs are binary classifiers. To support multi-class classification, we use a so called one-vs.-one strategy.
+If $k$ is the number of classes, $\frac{k(k-1)}{2}$ SVMs are constructed as described above and each one of them 
+trains data from two classes solving the quadratic programming problem \ref{svm5}. For classification a voting strategy is used. Each binary classifier casts a vote
+as described in \ref{svm6}
+and in the end the class with the most votes is chosen as the predicted class. In case that two or more classes have identical votes, 
+a random choice is made between these classes.
+\subsubsection*{Estimating Probabilities}
+The SVM algorithm predicts only class labels without probability information. Because we aim to apply an ensemble
+learning approach, we need to extend the SVM algorithm to give probability estimates. We are using LIBSVM \cite{chang2011libsvm} for 
+constructing the SVM classifier. Based on their implementation the probability weights for multi-class classification 
+are estimated as follows:
+
+Given $k$ classes of data, for any $\mathbf{x}$, pairwise class probabilities are estimated first based on \cite{lin2007note}:
+\begin{equation*}
+  r_{ij} = P(\mathbf{y}=i|\mathbf{y}=i\ or \ j,\mathbf{x})
+\end{equation*}
+If $u$ is the decision value at $\mathbf{x}$, we estimate $r_{ij}$ by the equation:
+\begin{equation}\label{log}
+  r_{ij} = \frac{1}{1+e^{Au+B}}
+\end{equation}
+where $A$ and $B$ are estimated by minimizing the negative log likelihood of training data. It has been observed that
+decision values from training might overfit the model \ref{log}, so a five-fold cross-validation scheme is conducted to obtain
+the decision values before estimating $A$ and $B$. After collecting all $r_{ij}$ values, the following optimization
+problem is solved as proposed by \cite{wu2004probability}:
+\begin{equation}\label{prob}
+  \underset{\mathbf{P}}{min} \ \ \frac{1}{2}\sum_{i=1}^k \sum_{j:j\neq i}(r_{ji}p_i-r_{ij}p_j)^2
+  \quad subject \ to \quad \forall i \ p_i\geq 0 ,\quad \sum_{i=1}^k p_i = 1 
+\end{equation} 
+After solving this optimization problem, the SVM can give probability estimates $p_i$ for each class.
+A summary of the algorithm to solve the problem \ref{prob} is documented on \cite{chang2011libsvm} while 
+more details are presented on \cite{wu2004probability}.
 \subsection{Logistic Regression}
 \subsection{Ensemble Learning}
 \section{Documentation of Methods}
@@ -488,7 +538,7 @@ used in the pre-processing phase.
   features is computed over the whole song segment, providing a global feature set of size $96$.
   In the end, we append to this feature set the covariance matrix of the $20$ MFCCs
   calculated over each analysis window. The usage of the covariance matrix of MFCCs led to better results
-  using SVMs as a classifier [To-Add]. Finally, we have computed for each song a feature set of size $496$ which
+  using SVMs as a classifier \cite{ellis}. Finally, we have computed for each song a feature set of size $496$ which
   is fed to both the SVM and logistic regression algorithms.
 \end{itemize}
 \subsection{Cross Validation of Parameters}
@@ -503,7 +553,7 @@ decided, the weights of each classifier in the ensemble system are decided in th
 The feature set fed to the network is of size $48$ so our network consists of $K=48$
 input units. We are using the network to classify each musical piece into one of the 10 genres.
 Therefore, the network will $L=10$ output units.
-\subsubsection*{Constructing the network}
+\subsubsection*{Constructing the Network}
 Weight matrices $\mathbf{W^{in},\ W}$ and the bias vector $\mathbf{b_N}$ are randomly initialized with real numbers
 in the interval $[-0.5,0.5]$. The spectral radius $\lambda_{max}$ of the weight matrix $\mathbf{W}$ is computed 
 and we scale the matrix with the inverse of this factor. After this operation, $\mathbf{W}$ will have a spectral 
@@ -516,14 +566,26 @@ $N\times (n_{train}-n_0)$. In our case $n_{train} = 900\cdot f$ and $n_0 = 900\c
 frames for each musical piece. The output teacher matrix $\mathbf{Yt}$ will be of size $L\times (n_{train}-n_0)$. 
 Each column vector of $\mathbf{Yt}$ consists of zeros and a $1$ on the right genre. By using the equation \ref{esn:3} 
 the output weights matrix $\mathbf{W^{out}}$ is computed.
-\subsubsection*{Testing the network}
+\subsubsection*{Testing the Network}\label{nettest}
 Using state update equations \ref{esn:1} and \ref{esn:2}, the network is tested on each validation set.
 For each musical piece in the validation set, the computed output vectors are saved in a matrix of size 
-$L\times (f-30)$. The mean of this matrix over each row is computed resulting in a $L$ dimensional vector. 
+$L\times (f-30)$. The mean of this matrix over each row is computed resulting in a $L$ dimensional vector.
+This vector is saved as the output of the network which is fed to the ensemble system.
 The index of the highest value is chosen as the predicted genre. For each run we compute the classification accuracy
-by dividing the number of correct predictions by 100.
-
-
+by dividing the number of correct predictions by 100. 
+\subsection{SVM Procedure}
+Each song is fed to the SVM algorithm as a pair $(x,y)$, where $\mathbf{x}$ is a feature set of size 496 
+and $\mathbf{y}$ is a label from $1$ to $10$. For each validation round, the SVM is trained on 900 songs
+as described in \ref{svms}. In the testing phase, we predict the genre for each of the 100 songs in the validation set.
+The classification accuracy is computed for each run as in \ref{nettest}. Besides the class prediction, we compute
+for each song probability vectors which will be fed to the ensemble system.
+\subsection{Logistic Regression Procedure}
+\subsection{Ensemble Learning Procedure}
+\section{Results of the Experiment}
+\subsection*{Evaluation Criteria}
+\subsection*{Results}
+\section{Conclusions}
+\subsection{Future Work}
 \nocite{*}
 \newpage
 \bibliographystyle{unsrt}
