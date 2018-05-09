@@ -653,14 +653,6 @@ used in the pre-processing phase.
   using SVMs as a classifier \cite{ellis}. Finally, we have computed for each song a feature set of size $496$ which
   is fed to both the SVM and logistic regression algorithms.
 \end{itemize}
-\subsection{Cross Validation of Parameters}
-A 10-fold cross validation is used to determine the parameters of the classifiers 
-that achieve the best performance. The dataset is divided in 10 random smaller sets of 
-100 audio files each. Each of these subsets is used iteratively as a validation set, while
-the remaining data is used for training each of the classifiers. For each classifier configuration,
-the mean classification accuracy over the 10 validation sets is computed and the configurations with 
-the highest accuracy are chosen as the optimal ones. After the parameters of each classifier are 
-decided, the weights of each classifier in the ensemble system are decided in the same fashion.
 \subsection{ESN Procedure}
 The feature set fed to the network is of size $48$ so our network consists of $K=48$
 input units. We are using the network to classify each musical piece into one of the 10 genres.
@@ -702,10 +694,51 @@ For each song in the validation set, we have computed three probability scores a
 \ref{svmproc}, \ref{logproc}.
 We combine the probability scores by a soft voting strategy as documented in \ref{voting}. We compute accordingly
 the classification accuracy for each run by dividing the number of correct predictions by 100.
+\subsection{Cross Validation of Parameters}\label{cross}
+A 10-fold cross validation is used to determine the parameters of the classifiers 
+that achieve the best performance. The dataset is divided in 10 random smaller sets of 
+100 audio files each. Each of these subsets is used iteratively as a validation set, while
+the remaining data is used for training each of the classifiers. For each classifier configuration,
+the mean classification accuracy over the 10 validation sets is computed and the configurations with 
+the highest accuracy are chosen as the optimal ones. After the parameters of each classifier are 
+decided, the weights of each classifier in the ensemble system are decided in the same fashion.
+\begin{itemize}
+  \item ESN Parameters - After allocating the initial weight matrices $\mathbf{W^{in}},\ \mathbf{W}$ and the bias factor $\mathbf{b_N}$, 
+  it is for the best to scale these matrices respectively with scalars $\mathbf{s_1},\ \mathbf{s_2},\ \mathbf{s_3}$
+  that improve the performance of the network. The reservoir size $N$, the leaking rate $\alpha$ and the regularization 
+  coefficient $\gamma^2$ also affect the network behavior.
+  \item SVM Parameters - The first choice for the SVM algorithm is that of the kernel function. After choosing the kernel function,
+  we choose the kernel parameters (if any) and lastly the trade-off parameter $C$.
+  \item LR Parameters - The only choice for the logistic regression model is that of the trade-off parameter $C$.
+\end{itemize}
 \section{Results of the Experiment}
-This section gives a summary of the evaluation criteria and presents the chosen optimal parameters for the system.
-We also document the results of our experiment.
-\subsection{Evaluation Criteria}
+\subsection{Optimal Parameters}
+After performing a 10-fold cross validation scheme as documented in \ref{cross}, we present the parameters of the system
+that give the best performance.
+\subsubsection*{ESN Parameters}
+\begin{itemize}
+  \item $N = 800$
+  \item $\alpha = 0.08$
+  \item $\gamma^2 \in [0.0001,0.01]$
+  \item $\mathbf{s_1}\in [0.95,1.1]$
+  \item $\mathbf{s_2}\in [1.2,1.5]$
+  \item $\mathbf{s_3}\in [0.1,0.2]$
+  \item $n_0^* = 30$ (washout time for each musical piece)
+\end{itemize}
+\subsubsection*{SVM Parameters}
+\begin{itemize}
+  \item Kernel function - We chose a radial basis kernel function $K$ with width $\psi$:
+  
+  \begin{math}
+    K(\mathbf{x},\mathbf{y}) = e^{\frac{-||\mathbf{x}-\mathbf{y}||^2}{2\psi^2}}
+  \end{math}
+    \item Kernel parameters - The only parameter of the kernel $\psi$, was set to its default value
+    $\psi = \sqrt{\frac{N}{2}}$, where $N = 496$ is the number of features fed to the SVM.
+    \item $C = 1000$
+\end{itemize}
+\subsubsection*{LR Parameters} $C = 1000$
+\subsubsection*{Ensemble System Parameters}
+$\mathbf{w}_1 = 7,\ \mathbf{w}_2 = 5,\ \mathbf{w}_3 = 2$
 \subsection{Results}
 \section{Conclusions}
 \subsection{Future Work}
