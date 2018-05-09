@@ -345,7 +345,7 @@ and published in 1995 \cite{cortes1995support}. The following sections explain t
 in \cite{fletcher2009support,law2006simple,berwick2003idiot}.
 \subsubsection*{Motivation behind SVMs}
 The basic idea of the SVM algorithm is to find an optimal hyperplane for linearly separable data points.
-Given linearly separable training data points $\mathbf{x}_i\in R^n,i=1,....,n$, where each $\mathbf{x}_i$
+Given linearly separable training data points $\mathbf{x}_i\in R^n,i=1,....,l$, where each $\mathbf{x}_i$
 belongs in one of the two classes $\mathbf{y}_i=-1$ or $+1$, the SVM algorithm tries to find an optimal hyperplane
 separating the two classes \cite{fletcher2009support}. This hyperplane can be defined formally as:
 \begin{equation}
@@ -384,8 +384,8 @@ The solution to this problem and the mathematical formalism behind it are docume
 We ignore the step by step solution and present just the result. The original problem \ref{primal}, known as the primal problem,
 is equivalent to the following dual problem \cite{law2006simple}:
 \begin{equation}
-  max \ W(\mathbf{\alpha}) = \sum_{i=1}^n \alpha_i - \frac{1}{2} \sum_{i=1,j=1}^n \alpha_i \alpha_j \mathbf{y}_i\mathbf{y}_j\mathbf{x}_i\mathbf{x}_j
-  \quad s.t \quad \alpha_i \geq 0,\ \sum_{i=1}^n \alpha_i\mathbf{y}_i = 0
+  max \ W(\mathbf{\alpha}) = \sum_{i=1}^l \alpha_i - \frac{1}{2} \sum_{i=1,j=1}^l \alpha_i \alpha_j \mathbf{y}_i\mathbf{y}_j\mathbf{x}_i\mathbf{x}_j
+  \quad s.t \quad \alpha_i \geq 0,\ \sum_{i=1}^l \alpha_i\mathbf{y}_i = 0
 \end{equation}
 This is a quadratic programming problem and a solution $\alpha=(\alpha_i)$ can be found using different approaches.
 For SVM, sequential minimal optimization seems to be the most popular \cite{law2006simple}. A nice characteristic 
@@ -402,7 +402,7 @@ After the optimal hyperplane is computed, the SVM classifier can categorize new 
 \subsubsection*{Extension to non-linearly Separable Data}
 In order to extend the SVM methodology to handle data that is not fully linearly separable, we relax 
 the constraints \ref{svm1} and \ref{svm2} to allow for misclassified points \cite{fletcher2009support}. This is done by introducing
-positive slack variables $\xi_i$, $i=1,....,n$ and the new equations can be combined into:
+positive slack variables $\xi_i$, $i=1,....,l$ and the new equations can be combined into:
 \begin{equation}
   \mathbf{y}_i(\mathbf{x}_i\cdot\mathbf{w}+\mathbf{b}) - 1 + \xi_i\geq 0 \quad \text{where} \quad \xi_i\geq 0\ \forall i
 \end{equation}
@@ -415,14 +415,14 @@ In this SVM version, data points on the incorrect side of the margin boundary ha
 from it. The correctly classified data points have $\xi_i=0$. As we are trying to reduce the number of misclassifications,
 we adapt the previous objective function \ref{primal} in the following way:
 \begin{equation}
-  min \ \frac{1}{2}||\mathbf{w}||^2+C\sum_{i=1}^n\xi_i\quad s.t. \quad \mathbf{y}_i(\mathbf{x}_i\cdot\mathbf{w}+\mathbf{b}) - 1 + \xi_i\geq 0 \ \forall i
+  min \ \frac{1}{2}||\mathbf{w}||^2+C\sum_{i=1}^l\xi_i\quad s.t. \quad \mathbf{y}_i(\mathbf{x}_i\cdot\mathbf{w}+\mathbf{b}) - 1 + \xi_i\geq 0 \ \forall i
 \end{equation}
 where the parameter $C$ controls the trade-off between the slack variable penalty and the size of the margin.
 The new constrained optimization problem can be solved in the same way as in the linear separable case, except
 there is an upper bound $C$ on $\alpha_i$ now \cite{law2006simple}. The dual problem in this case is:
 \begin{equation}
-  max \ W(\mathbf{\alpha}) = \sum_{i=1}^n \alpha_i - \frac{1}{2} \sum_{i=1,j=1}^n \alpha_i \alpha_j \mathbf{y}_i\mathbf{y}_j\mathbf{x}_i\mathbf{x}_j
-  \quad s.t \quad C\geq\alpha_i \geq 0,\ \sum_{i=1}^n \alpha_i\mathbf{y}_i = 0
+  max \ W(\mathbf{\alpha}) = \sum_{i=1}^l \alpha_i - \frac{1}{2} \sum_{i=1,j=1}^l \alpha_i \alpha_j \mathbf{y}_i\mathbf{y}_j\mathbf{x}_i\mathbf{x}_j
+  \quad s.t \quad C\geq\alpha_i \geq 0,\ \sum_{i=1}^l \alpha_i\mathbf{y}_i = 0
 \end{equation}
 The weight vector $\mathbf{w}$ can be constructed in the same way as in the linearly separable case.
 \subsubsection*{Extension to non-linear Decision Boundary}
@@ -437,8 +437,8 @@ This is the so called kernel trick. We define the kernel function $K$:
 For the linear decision boundary case, $\phi$ is the identity function. The dual problem in the case of non-linearly decision boundary
 transforms to:
 \begin{equation}\label{svm5}
-  max \ W(\mathbf{\alpha}) = \sum_{i=1}^n \alpha_i - \frac{1}{2} \sum_{i=1,j=1}^n \alpha_i \alpha_j \mathbf{y}_i\mathbf{y}_jK(\mathbf{x}_i,\mathbf{x}_j)
-  \quad s.t \quad C\geq\alpha_i \geq 0,\ \sum_{i=1}^n \alpha_i\mathbf{y}_i = 0
+  max \ W(\mathbf{\alpha}) = \sum_{i=1}^l \alpha_i - \frac{1}{2} \sum_{i=1,j=1}^l \alpha_i \alpha_j \mathbf{y}_i\mathbf{y}_jK(\mathbf{x}_i,\mathbf{x}_j)
+  \quad s.t \quad C\geq\alpha_i \geq 0,\ \sum_{i=1}^l \alpha_i\mathbf{y}_i = 0
 \end{equation}
 The new data $\mathbf{z}$ can be categorized by looking at the sign of the expression:
 \begin{equation}\label{svm6}
@@ -451,9 +451,9 @@ We present here 3 popular examples of kernel functions:
   \begin{math}
     K(\mathbf{x},\mathbf{y}) = (\mathbf{x}\mathbf{y} + 1)^d
   \end{math}
-  \item Radial basis function with width $\sigma$:
+  \item Radial basis function with width $\psi$:
   \begin{math}
-    K(\mathbf{x},\mathbf{y}) = e^{\frac{-||\mathbf{x}-\mathbf{y}||^2}{2\sigma^2}}
+    K(\mathbf{x},\mathbf{y}) = e^{\frac{-||\mathbf{x}-\mathbf{y}||^2}{2\psi^2}}
   \end{math}
   \item Sigmoid function with parameters $\kappa$ and $\theta$: 
   \begin{math}
@@ -495,8 +495,120 @@ problem is solved as proposed by \cite{wu2004probability}:
 After solving this optimization problem, the SVM can give probability estimates $p_i$ for each class.
 A summary of the algorithm to solve the problem \ref{prob} is documented on \cite{chang2011libsvm} while 
 more details are presented on \cite{wu2004probability}.
-\subsection{Logistic Regression}
-\subsection{Ensemble Learning}
+\subsection{Logistic Regression}\label{logistic}
+We present in this section a summary of the logistic regression model as described in \cite{hosmer2013applied}.
+Regression methods are a set of statistical processes for estimating the relationship between a response variable
+and one or more explanatory variables. Logistic regression has become the standard model of analysis in the situation when the outcome of the response variable
+is discrete. What distinguishes logistic regression from linear regression is that the outcome variable in logistic regression 
+is dichotomous. 
+\subsubsection*{Motivation behind Logistic Regression}
+The logistic regression model is used to estimate the probability of a binary response based on ore more predictors.
+We give first a definition of the logistic function. The logistic function $\sigma$ is a sigmoid function which takes a real input
+and outputs a value between zero and one:
+\begin{equation}
+  \sigma(t) = \frac{1}{1+e^{-t}} = \frac{e^t}{1+e^t}
+\end{equation}
+Assume that we have $l$ training data points $(\mathbf{x}_i,\mathbf{y}_i)$ where
+$\mathbf{x}_i \in R^n$ and $\mathbf{y}_i=1$ or $0$. The value of $\mathbf{y}\ 1$  means that a data point belongs to one 
+class and the value $0$ denotes the membership to the other class. We can treat the membership to a certain class
+as a dichotomous variable and use the logistic regression model to estimate the probability of the membership of a
+data point $\mathbf{x}$ in the 'first' class:
+\begin{equation}
+  p(\mathbf{x}) = P(y=1|\mathbf{x}) = \sigma(g(\mathbf{x}))
+\end{equation}
+where $g$ is the inverse of the logistic function also called the logit function:
+\begin{equation}
+  g(\mathbf{x}) = ln(\frac{p(\mathbf{x})}{1-p(\mathbf{x})}) = \mathbf{w}_0+\mathbf{w}_1\mathbf{x}_1+.....+\mathbf{w}_n\mathbf{x}_n
+\end{equation}
+The assumption that $g(\mathbf{x})$ is a linear combination of coordinates of $\mathbf{x}$ comes from linear regression.
+It remains for the logistic regression model to choose an optimal weight vector $\mathbf{w}\in R^{n+1}$. 
+
+The method of estimation used in logistic regression is maximum likelihood. This method yields values for the unknown 
+parameters which maximize the probability of obtaining the observed data. In order to apply this method we construct 
+first the likelihood function as follows:
+\begin{equation}
+  l(\mathbf{w}) = \prod_{i=1}^l p(\mathbf{y}_i|\mathbf{x}_i) =  \prod_{i=1}^l p(\mathbf{x}_i)^{\mathbf{y}_i}(1-p(\mathbf{x}_i))^{1-\mathbf{y}_i}\quad .
+\end{equation}
+The principle of maximum likelihood is to select the estimate of $\mathbf{w}$ which maximizes the likelihood function.
+However, it is easier mathematically to maximize the log of the likelihood function. This expression, known as log likelihood,
+is defined as:
+\begin{equation}\label{maxlg}
+  L(\mathbf{w}) = \sum_{i=1}^l {\mathbf{y}_iln[p(\mathbf{x}_i)]+(1-\mathbf{y}_i)ln[1-p(\mathbf{x}_i)]}\quad .
+\end{equation}
+Maximizing the log likelihood require special mathematical software which is present in most statistical packages.
+We do not present here an algorithm for maximizing \ref{maxlg} but such a solution is known to be found.
+\subsubsection*{Classification}
+Having found $\mathbf{w}$ that maximizes \ref{maxlg}, we can proceed to classifying testing data.
+For a new data point $\mathbf{z}$, we calculate $p(\mathbf{z}) = \frac{1}{1+e^{-\mathbf{w}\mathbf{z}}}$.
+If $p(\mathbf{z})\geq 0.5$, we classify $\mathbf{z}$ in the first class; otherwise $\mathbf{z}$ belongs to
+the other class. Here we use the convention of letting $\mathbf{z}_0=1$, so that 
+$\mathbf{wz} = \mathbf{w}_0 + \sum_{j=1}^n \mathbf{w}_j\mathbf{z}_j$.
+\subsubsection*{$L_2$ Regularization}
+To prevent overfitting, we use a $L_2$-regularized version of logistic regression. We are using LIBLINEAR \cite{fan2008liblinear}
+for constructing the logistic regression model. Based on their implementation, the model solves the following optimization problem:
+\begin{equation}\label{logfinal}
+  \underset{\mathbf{w}}{min} \ \ \frac{1}{2}\mathbf{w}^2+C\sum_{i=1}^l\xi(\mathbf{w};\mathbf{x}_i;\mathbf{y}_i)
+\end{equation}
+where $\xi(\mathbf{w};\mathbf{x}_i;\mathbf{y}_i)$ is a loss function and $C\geq 0$ is the trade-off parameter
+as in the SVM model. We should note here that the data is labeled differently with $\mathbf{y}_i \in \{-1,1\}$.
+In this case, it is clear that we can assign $p(\mathbf{y}|\mathbf{x}) = p(\mathbf{y}\mathbf{x})$. 
+As we said before the aim of the model is to maximize the log likelihood. As a loss function, this corresponds
+to minimizing the negative of the log likelihood. We calculate in this way the loss function to be minimized:
+\begin{equation}
+  J(\mathbf{w}) = -ln(\prod_{i=1}^l p(\mathbf{y}_i|\mathbf{x}_i)) = - \sum_{i=1}^l ln(p(\mathbf{y}_i|\mathbf{x}_i))
+  = \sum_{i=1}^l ln(\sigma(\mathbf{y}_i\mathbf{w}\mathbf{x}_i)^{-1}) = \sum_{i=1}^l ln(1+e^{-\mathbf{y}_i\mathbf{w}\mathbf{x}_i})
+\end{equation}
+
+which shows that $\xi(\mathbf{w};\mathbf{x}_i;\mathbf{y}_i) = ln(1+e^{-\mathbf{y}_i\mathbf{w}\mathbf{x}_i})$.
+Problem \ref{logfinal} is solved by LIBLINEAR by implementing a trust region Newton method as described in \cite{lin2008trust}.
+After finding the optimal solution $\mathbf{w}$ we classify new data $\mathbf{z}$ by looking at the sign of the
+expression $\mathbf{w}\mathbf{z}$.
+\subsubsection*{Multi-class Classification}
+Logistic regression is a probabilistic binary classifier. To support multi-class classification, we use 
+a so called one-vs.-rest strategy. If $k$ is the number of classes, $k$ binary models are fit (one for each class).
+Each binary model solves the optimization problem \ref{logfinal} by treating samples of each class as the positive 
+outcome and all the other samples as the negative outcome. For a testing data point $\mathbf{z}$, we calculate
+the probability of the membership to each class. In the end the $k$ probability scores are normalized and the 
+class with the highest probability is chosen as the predicted one. 
+\subsection{Ensemble Learning}\label{voting}
+Ensemble learning algorithms take a different approach from the classical machine learning algorithms.
+Rather than constructing one best hypothesis to solve a certain problem, ensemble systems construct 
+a set of hypotheses and combine these hypotheses to solve the original problem \cite{dietterich2002ensemble}.
+Experimental evidence has shown that ensemble methods are often more accurate than any single hypothesis.
+Learning algorithms that output only a single hypothesis might suffer from three problems that can be
+partly overcome by ensemble methods \cite{dietterich2002ensemble}:
+\begin{itemize}
+  \item the statistical problem - This problem arises when the learning algorithm is searching a space 
+  of hypotheses that is too large for the amount of available training data. In such cases, there may
+  be several good hypotheses to be chosen from the hypothesis space. A simple vote of equally-good 
+  classifiers can improve the performance of the model. A learning algorithm that suffers from this problem
+  is said to have high "variance".
+  \item the computational problem - The computational problem arises when the learning algorithm
+  cannot guarantee to find the best hypothesis within the hypothesis space. For example, the procedure
+  of training neural networks with gradient descent can get stuck in local minima. A weighted 
+  combination of several different local minima can reduce the risk of choosing the wrong local minima 
+  to output.
+  \item the representation problem - This problem arises when the hypothesis space does not contain 
+  any hypotheses that are good approximations of the true function $f$. By taking a weighted vote 
+  of hypotheses, the learning algorithm may be able to form a more accurate approximation of $f$.
+  A learning algorithm that suffers from this problem is said to have high "bias".
+\end{itemize} 
+Experimental measures have shown that ensemble methods can reduce both the variance and the bias
+of learning algorithms \cite{dietterich2002ensemble}.
+
+In the context of our problem, the ensemble system consists of 3 different classifiers (ESNs, SVMs, LR) 
+which are trained individually to solve the problem of automatic music genre classification. 
+Each of these classifiers predicts a $10$ dimensional probability vector for each song in the validation sets.
+We combine these probability scores by a soft voting strategy. Assume that for a testing data point $\mathbf{z}$,
+the three classifiers output respectively the three probability vectors $p_{\mathbf{z}_1},\ p_{\mathbf{z}_2},\ p_{\mathbf{z}_3}$.
+We calculate a weighted sum of these probabilities:
+\begin{equation}
+  r_\mathbf{z} = \mathbf{w}_1p_{\mathbf{z}_1} + \mathbf{w}_2p_{\mathbf{z}_2} + \mathbf{w}_3p_{\mathbf{z}_3}
+\end{equation}
+where $r_\mathbf{z}$ denotes the final hypothesis for a data point $\mathbf{z}$. The predicted genre by the ensemble
+system for $\mathbf{z}$ is the index of the highest value in $r_\mathbf{z}$. The weights $\mathbf{w}_1,\
+\mathbf{w}_2,\ \mathbf{w}_3$ are also learned by a cross validation scheme.
+
 \section{Documentation of Methods}
 \subsection{Problem and Dataset Description}
 The experiments are based on the famous standard dataset used by Tzanetakis and Cook \cite{tzan}.
@@ -573,17 +685,28 @@ $L\times (f-30)$. The mean of this matrix over each row is computed resulting in
 This vector is saved as the output of the network which is fed to the ensemble system.
 The index of the highest value is chosen as the predicted genre. For each run we compute the classification accuracy
 by dividing the number of correct predictions by 100. 
-\subsection{SVM Procedure}
+\subsection{SVM Procedure}\label{svmproc}
 Each song is fed to the SVM algorithm as a pair $(x,y)$, where $\mathbf{x}$ is a feature set of size 496 
 and $\mathbf{y}$ is a label from $1$ to $10$. For each validation round, the SVM is trained on 900 songs
 as described in \ref{svms}. In the testing phase, we predict the genre for each of the 100 songs in the validation set.
 The classification accuracy is computed for each run as in \ref{nettest}. Besides the class prediction, we compute
 for each song probability vectors which will be fed to the ensemble system.
-\subsection{Logistic Regression Procedure}
+\subsection{Logistic Regression Procedure}\label{logproc}
+Each song is fed to the logistic regression model as described in \ref{svmproc}. For each validation round, 
+the model is trained on 900 songs as described in \ref{logistic}. In the testing phase, we compute a probability 
+vector for each of the 100 songs in the validation set. This vector will be fed to the ensemble system. The class
+with the highest probability is chosen as the predicted genre. The classification accuracy is computed for each run
+as in \ref{nettest}.
 \subsection{Ensemble Learning Procedure}
+For each song in the validation set, we have computed three probability scores as explained in \ref{nettest},
+\ref{svmproc}, \ref{logproc}.
+We combine the probability scores by a soft voting strategy as documented in \ref{voting}. We compute accordingly
+the classification accuracy for each run by dividing the number of correct predictions by 100.
 \section{Results of the Experiment}
-\subsection*{Evaluation Criteria}
-\subsection*{Results}
+This section gives a summary of the evaluation criteria and presents the chosen optimal parameters for the system.
+We also document the results of our experiment.
+\subsection{Evaluation Criteria}
+\subsection{Results}
 \section{Conclusions}
 \subsection{Future Work}
 \nocite{*}
