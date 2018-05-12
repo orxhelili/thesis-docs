@@ -1,6 +1,6 @@
 \documentclass[a4paper,11pt,oneside]{article}
 
-% To use this template, you have to have a halfway complete LaTeX
+% To use this template, you have to have a halfway  complete LaTeX
 % installation and you have to run pdflatex, followed by bibtex,
 % following by one-two more pdflatex runs.
 %
@@ -225,45 +225,45 @@ a description of each of the features used in our experiment.
   MFCCs in this experiment. In the end we apply Discrete Cosine Transform to obtain the feature vectors. 
   \item Short-time Energy - The short-time energy is the signal energy over a certain audio frame. It is computed as:
   \begin{equation} 
-    E = \sum_{m=1}^{N} x^2(m)
+    E = \sum_{m=1}^{N} x^2(m)\,,
   \end{equation} where $E$ represents the energy of the signal $x(m)$ \cite{jalil2013short}.
   \item Short-time Energy Entropy - This feature can be interpreted as a measure of abrupt changes in the signal energy.
   It is computed as:
   \begin{equation}
-    H = - \sum_{t=1}^N E_n[t]\cdot log_2(E_n[t])
+    H = - \sum_{t=1}^N E_n[t]\cdot log_2(E_n[t])\,,
   \end{equation} where $E_n[t]$ is the normalized energy over a sub-frame $t$.
   \item Zero Crossing Rate - This feature describes the rate at which the signal changes its sign. It is computed as:
   \begin{equation}
-    zcr = \frac{1}{N}\sum_{t=1}^{N} sign(x_t x_{t-1})
+    zcr = \frac{1}{N}\sum_{t=1}^{N} sign(x_t x_{t-1})\,,
   \end{equation} where $x$ is a signal of length $N$ ans $sign$ is an indicator function.
   \item Spectral Centroid - The spectral centroid is defined as the center of gravity of the magnitude spectrum of
   STFT \cite{tzan}. It is computed as:
   \begin{equation} \label{eq:3}
-    C_t = \frac{\sum_{n=1}^N M_t[n]\cdot n}{\sum_{n=1}^N M_t[n]}
+    C_t = \frac{\sum_{n=1}^N M_t[n]\cdot n}{\sum_{n=1}^N M_t[n]}\,,
   \end{equation} where $M_t[n]$ is the magnitude of STFT at frame $t$ and frequency bin $n$.
   \item Spectral Spread - The spectral spread is defined as the variance of the magnitude spectrum of STFT.
   It is computed as:
   \begin{equation}
-    S_t = \sqrt{\sum_{n=1}^N \frac{(C_t-n)^2\cdot M_t[n]}{M_t[n]}}
+    S_t = \sqrt{\sum_{n=1}^N \frac{(C_t-n)^2\cdot M_t[n]}{M_t[n]}}\,,
   \end{equation} where $C_t$ and $M_t[n]$ are defined as in equation \ref{eq:3}.
   \item Spectral Entropy - This feature is similar to Energy Entropy. In contrast the entropy is
   calculated over sub-frames of the spectrum, not the signal itself.
   \item Spectral Flux - The spectral flux is defined as the squared difference between the normalized magnitudes
   of successive spectral distributions \cite{tzan}. It is computed as:
   \begin{equation}
-    F_t = \sum_{n=1}^N (N_t[n]-N_{t-1}[n])^2
+    F_t = \sum_{n=1}^N (N_t[n]-N_{t-1}[n])^2\,,
   \end{equation} where $N_t[n]$ denotes the normalized magnitude of the Fourier 
   transform at frame $t$ and frequency bin $n$.
   \item Spectral Rolloff - The spectral rolloff is defined as the frequency $R_t$ below which $85\%$ of the magnitude
   distribution is concentrated \cite{tzan}. It is computed as:
   \begin{equation}
-    \sum_{n=1}^{R_t} M_t[n] = 0.85 \cdot \sum_{n=1}^N M_t[n]
+    \sum_{n=1}^{R_t} M_t[n] = 0.85 \cdot \sum_{n=1}^N M_t[n]\,,
   \end{equation} where $M_t[n]$ is defined as in equation \ref{eq:3}.
   \item Delta-Cepstral Coefficients - These features serve as the first order derivative of MFCCs and
    are appended to MFCCs as documented below.\\
   Given MFCCs $C[n]$ over an analysis window, we calculate the delta features
   \begin{equation}
-    D[n] = C[n]-C[n-1]
+    D[n] = C[n]-C[n-1]\,,
   \end{equation} where $n$ is the index of the analysis frame. It has been shown that the usage of delta-cepstral
   coefficients produces better results in the field of speech recognition \cite{kumar2011delta}.
 \end{itemize}
@@ -296,11 +296,11 @@ taken from \cite{jaeg7}).}
 In this project we are using the version of ESNs with leaky integration as described in \cite{jaeg8}. 
 Using this particular type of the network the activation of internal units follows the equation:
 \begin{equation}\label{esn:1}
-\mathbf{x}(n+1) = (1-\alpha)\mathbf{x}(n) +  \alpha\mathbf{f}(\mathbf{Wx}(n) +\mathbf{W^{in}u}(n+1) + \mathbf{b_N})
+\mathbf{x}(n+1) = (1-\alpha)\mathbf{x}(n) +  \alpha\mathbf{f}(\mathbf{Wx}(n) +\mathbf{W^{in}u}(n+1) + \mathbf{b_N})\,,
 \end{equation}
 where $\mathbf{b_N}$ is a fixed random N dimensional bias vector, $\alpha$ is the leaking rate of the network and $\mathbf{f}=(f_1...f_N)$ are the internal unit's output functions. In our case we will be using $\mathbf{tanh}$ as this function. The output is updated according to the equation:
 \begin{equation}\label{esn:2}
-\mathbf{y}(n+1) = g(\mathbf{W^{out}}\mathbf{x}(n+1)) 
+\mathbf{y}(n+1) = g(\mathbf{W^{out}}\mathbf{x}(n+1))\,,
 \end{equation}
 where $\mathbf{g}$ is an output activation function. In our case we will be using the identity function so 
 $\mathbf{g}$ will be ignored. 
@@ -313,7 +313,7 @@ Along the teacher input signal, a teacher output signal is provided. The desired
 are sorted row-wise into a teacher output collection matrix $\mathbf{Y_t}$ of size $(n_{train}-n_0)\times L$ \cite{spedia}. 
 Then the output weights $\mathbf{W^{out}}$ are trained using linear regression following the equation:
 \begin{equation}\label{esn:3}
-\mathbf{W^{out}=Y_tX^T(XX^T} + \gamma^2I)^{-1}
+\mathbf{W^{out}=Y_tX^T(XX^T} + \gamma^2I)^{-1}\,,
 \end{equation}
 where $\gamma^2$ is the regularization coefficient and $I$ is the identity matrix. 
 After training the output weight by linear regression the network is ready for testing.
@@ -322,7 +322,7 @@ Under certain conditions, the activations state $\mathbf{x}(n)$ of a recurrent n
 the input history presented to the network \cite{jaeg6}. More precisely there exists an echo function $\mathbf{E}$, 
 such that the activation state of the network is calculated as:
 \begin{equation}
-\mathbf{x}(n) = \mathbf{E}(...,\mathbf{u}(n-1),\mathbf{u}(n))
+\mathbf{x}(n) = \mathbf{E}(...,\mathbf{u}(n-1),\mathbf{u}(n))\,.
 \end{equation}
 We give here a proposition from \cite{jaeg6} which gives sufficient conditions for the existence and the 
 non-existence of echo states.
@@ -349,8 +349,9 @@ Given linearly separable training data points $\mathbf{x}_i\in R^n,i=1,....,l$, 
 belongs in one of the two classes $\mathbf{y}_i=-1$ or $+1$, the SVM algorithm tries to find an optimal hyperplane
 separating the two classes \cite{fletcher2009support}. This hyperplane can be defined formally as:
 \begin{equation}
-  \mathbf{w}\cdot\mathbf{x} + \mathbf{b} = 0
-\end{equation} where $\mathbf{w}$ is a weight vector normal to the hyperplane and $\mathbf{b}$ is a bias vector.
+  \mathbf{w}\cdot\mathbf{x} + \mathbf{b} = 0\,,
+\end{equation} where $\mathbf{w}$ is a weight vector normal to the hyperplane and $\frac{\mathbf{b}}{||\mathbf{w}||}$
+is the distance from the hyperplane to the origin.
 Support vectors are the data points closest to this separating
 hyperplane and the aim of the algorithm is to maximize the distance of the hyperplane to the support
 vectors \cite{law2006simple}. This distance is called the margin of the separating hyperplane.
@@ -365,37 +366,37 @@ $H_1$ and $H_2$ denote the planes on which the support vectors lie on.
 The margin of the hyperplane is $m = |d_1|+|d_2|$. Referring to this figure, implementing the SVM boils down to selecting
 variables $\mathbf{w}$ and $\mathbf{b}$ such that:
 \begin{equation}\label{svm1}
-  \mathbf{x}_i\cdot\mathbf{w}+\mathbf{b}\geq +1 \quad \forall \mathbf{y}_i = +1
+  \mathbf{x}_i\cdot\mathbf{w}+\mathbf{b}\geq +1 \quad \forall \mathbf{y}_i = +1\,,
 \end{equation}
 \begin{equation}\label{svm2}
-  \mathbf{x}_i\cdot\mathbf{w}+\mathbf{b}\leq -1 \quad \forall \mathbf{y}_i = -1
+  \mathbf{x}_i\cdot\mathbf{w}+\mathbf{b}\leq -1 \quad \forall \mathbf{y}_i = -1\,.
 \end{equation}
 The equations can be combined into:
 \begin{equation}\label{svm3}
-  \mathbf{y}_i(\mathbf{x}_i\cdot\mathbf{w}+\mathbf{b}) - 1 \geq 0 \quad \forall i
+  \mathbf{y}_i(\mathbf{x}_i\cdot\mathbf{w}+\mathbf{b}) - 1 \geq 0 \quad \forall i\,.
 \end{equation}
 As we said earlier the SVM algorithm aims to maximize the margin $m$. Simple vector geometry
 shows that $m = \frac{2}{||\mathbf{w}||}$ \cite{fletcher2009support}. Maximizing $m$ is equivalent to minimizing
 $\frac{1}{2}||\mathbf{w}||^2$, which leads to solving the following constrained optimization problem:
 \begin{equation}\label{primal}
-  min \ \frac{1}{2}||\mathbf{w}||^2 \quad s.t. \quad  \mathbf{y}_i(\mathbf{x}_i\cdot\mathbf{w}+\mathbf{b}) - 1 \geq 0 \quad \forall i
+  min \ \frac{1}{2}||\mathbf{w}||^2 \quad s.t. \quad  \mathbf{y}_i(\mathbf{x}_i\cdot\mathbf{w}+\mathbf{b}) - 1 \geq 0 \quad \forall i\,.
 \end{equation}
 The solution to this problem and the mathematical formalism behind it are documented in \cite{law2006simple}.
 We ignore the step by step solution and present just the result. The original problem \ref{primal}, known as the primal problem,
-is equivalent to the following dual problem \cite{law2006simple}:
+is equivalent to the following dual problem:
 \begin{equation}
   max \ W(\mathbf{\alpha}) = \sum_{i=1}^l \alpha_i - \frac{1}{2} \sum_{i=1,j=1}^l \alpha_i \alpha_j \mathbf{y}_i\mathbf{y}_j\mathbf{x}_i\mathbf{x}_j
-  \quad s.t \quad \alpha_i \geq 0,\ \sum_{i=1}^l \alpha_i\mathbf{y}_i = 0
+  \quad s.t \quad \alpha_i \geq 0,\ \sum_{i=1}^l \alpha_i\mathbf{y}_i = 0\,.
 \end{equation}
 This is a quadratic programming problem and a solution $\alpha=(\alpha_i)$ can be found using different approaches.
 For SVM, sequential minimal optimization seems to be the most popular \cite{law2006simple}. A nice characteristic 
 of the solution is that many of the $\alpha_i$ are $0$ and the $\mathbf{x}_i$ with non-zero $\alpha_i$ are the support 
-vectors. Therefore we can construct $\mathbf{w}$ as a linear combination of a small number of data points \cite{law2006simple}:
+vectors. Therefore we can construct $\mathbf{w}$ as a linear combination of a small number of data points:
 \begin{equation}\label{svm4}
-  \mathbf{w} = \sum_{j=1}^s \alpha_{t_j}\mathbf{y}_{t_j}\mathbf{x}_{t_j}
+  \mathbf{w} = \sum_{j=1}^s \alpha_{t_j}\mathbf{y}_{t_j}\mathbf{x}_{t_j}\,,
 \end{equation}
 where $t_j(j=1,...,s)$ are the indices of the $s$ support vectors.
-After the optimal hyperplane is computed, the SVM classifier can categorize new data $\mathbf{z}$ by looking at the sign of the expression:
+After the optimal hyperplane is computed, the SVM classifier can categorize new data $\mathbf{z}$ by looking at the sign of the expression
 \begin{equation}
   f = \mathbf{w}\cdot\mathbf{z}+\mathbf{b}
 \end{equation} and categorize it as class $1$ if the $f$ is positive and class $-1$ otherwise.
@@ -404,7 +405,7 @@ In order to extend the SVM methodology to handle data that is not fully linearly
 the constraints \ref{svm1} and \ref{svm2} to allow for misclassified points \cite{fletcher2009support}. This is done by introducing
 positive slack variables $\xi_i$, $i=1,....,l$ and the new equations can be combined into:
 \begin{equation}
-  \mathbf{y}_i(\mathbf{x}_i\cdot\mathbf{w}+\mathbf{b}) - 1 + \xi_i\geq 0 \quad \text{where} \quad \xi_i\geq 0\ \forall i
+  \mathbf{y}_i(\mathbf{x}_i\cdot\mathbf{w}+\mathbf{b}) - 1 + \xi_i\geq 0 \quad \text{where} \quad \xi_i\geq 0\ \forall i\,.
 \end{equation}
 \begin{figure}[H]
   \includegraphics[scale=0.3]{nonlinear}
@@ -415,14 +416,14 @@ In this SVM version, data points on the incorrect side of the margin boundary ha
 from it. The correctly classified data points have $\xi_i=0$. As we are trying to reduce the number of misclassifications,
 we adapt the previous objective function \ref{primal} in the following way:
 \begin{equation}
-  min \ \frac{1}{2}||\mathbf{w}||^2+C\sum_{i=1}^l\xi_i\quad s.t. \quad \mathbf{y}_i(\mathbf{x}_i\cdot\mathbf{w}+\mathbf{b}) - 1 + \xi_i\geq 0 \ \forall i
+  min \ \frac{1}{2}||\mathbf{w}||^2+C\sum_{i=1}^l\xi_i\quad s.t. \quad \mathbf{y}_i(\mathbf{x}_i\cdot\mathbf{w}+\mathbf{b}) - 1 + \xi_i\geq 0 \ \forall i\,,
 \end{equation}
 where the parameter $C$ controls the trade-off between the slack variable penalty and the size of the margin.
 The new constrained optimization problem can be solved in the same way as in the linear separable case, except
 there is an upper bound $C$ on $\alpha_i$ now \cite{law2006simple}. The dual problem in this case is:
 \begin{equation}
   max \ W(\mathbf{\alpha}) = \sum_{i=1}^l \alpha_i - \frac{1}{2} \sum_{i=1,j=1}^l \alpha_i \alpha_j \mathbf{y}_i\mathbf{y}_j\mathbf{x}_i\mathbf{x}_j
-  \quad s.t \quad C\geq\alpha_i \geq 0,\ \sum_{i=1}^l \alpha_i\mathbf{y}_i = 0
+  \quad s.t \quad C\geq\alpha_i \geq 0,\ \sum_{i=1}^l \alpha_i\mathbf{y}_i = 0\,.
 \end{equation}
 The weight vector $\mathbf{w}$ can be constructed in the same way as in the linearly separable case.
 \subsubsection*{Extension to non-linear Decision Boundary}
@@ -432,17 +433,17 @@ Computation in this new space can be quite costly but this is not a problem for 
 of the data points. As long as we can calculate the inner product in the feature space, we do not need the mapping explicitly \cite{law2006simple}.
 This is the so called kernel trick. We define the kernel function $K$:
 \begin{equation}
-  K(\mathbf{x}_i,\mathbf{x}_j) = \phi(\mathbf{x}_i)\phi(\mathbf{x}_j)
+  K(\mathbf{x}_i,\mathbf{x}_j) = \phi(\mathbf{x}_i)\phi(\mathbf{x}_j)\,,
 \end{equation} where $\phi(\mathbf{x})$ is a map which transforms the data points into the linearly separable feature space.
 For the linear decision boundary case, $\phi$ is the identity function. The dual problem in the case of non-linearly decision boundary
 transforms to:
 \begin{equation}\label{svm5}
   max \ W(\mathbf{\alpha}) = \sum_{i=1}^l \alpha_i - \frac{1}{2} \sum_{i=1,j=1}^l \alpha_i \alpha_j \mathbf{y}_i\mathbf{y}_jK(\mathbf{x}_i,\mathbf{x}_j)
-  \quad s.t \quad C\geq\alpha_i \geq 0,\ \sum_{i=1}^l \alpha_i\mathbf{y}_i = 0
+  \quad s.t \quad C\geq\alpha_i \geq 0,\ \sum_{i=1}^l \alpha_i\mathbf{y}_i = 0\,.
 \end{equation}
 The new data $\mathbf{z}$ can be categorized by looking at the sign of the expression:
 \begin{equation}\label{svm6}
-  f = \mathbf{w}\mathbf{\phi(z)}+\mathbf{b} = \sum_{j=1}^s \alpha_{t_j}\mathbf{y}_{t_j}K(\mathbf{x}_{t_j},\mathbf{z})+\mathbf{b} 
+  f = \mathbf{w}\mathbf{\phi(z)}+\mathbf{b} = \sum_{j=1}^s \alpha_{t_j}\mathbf{y}_{t_j}K(\mathbf{x}_{t_j},\mathbf{z})+\mathbf{b}\,, 
 \end{equation} where $t_j$ is defined as in \ref{svm4}.
 The kernel function, being an inner product, can be viewed as measure of similarity between two data points.
 We present here 3 popular examples of kernel functions:
@@ -478,11 +479,12 @@ are estimated as follows:
 
 Given $k$ classes of data, for any $\mathbf{x}$, pairwise class probabilities are estimated first based on \cite{lin2007note}:
 \begin{equation*}
-  r_{ij} = P(\mathbf{y}=i|\mathbf{y}=i\ or \ j,\mathbf{x})
-\end{equation*}
+  r_{ij} = P(\mathbf{y}=i|\mathbf{y}=i\ or \ j,\mathbf{x})\,,
+\end{equation*}where $r_{ij}$ is the probability of membership to class $i$ in a binary classifier
+with samples from classes $i$ and $j$.
 If $u$ is the decision value at $\mathbf{x}$, we estimate $r_{ij}$ by the equation:
 \begin{equation}\label{log}
-  r_{ij} = \frac{1}{1+e^{Au+B}}
+  r_{ij} = \frac{1}{1+e^{Au+B}}\,,
 \end{equation}
 where $A$ and $B$ are estimated by minimizing the negative log likelihood of training data. It has been observed that
 decision values from training might overfit the model \ref{log}, so a five-fold cross-validation scheme is conducted to obtain
@@ -490,7 +492,7 @@ the decision values before estimating $A$ and $B$. After collecting all $r_{ij}$
 problem is solved as proposed by \cite{wu2004probability}:
 \begin{equation}\label{prob}
   \underset{\mathbf{P}}{min} \ \ \frac{1}{2}\sum_{i=1}^k \sum_{j:j\neq i}(r_{ji}p_i-r_{ij}p_j)^2
-  \quad subject \ to \quad \forall i \ p_i\geq 0 ,\quad \sum_{i=1}^k p_i = 1 
+  \quad subject \ to \quad \forall i \ p_i\geq 0 ,\quad \sum_{i=1}^k p_i = 1\,.
 \end{equation} 
 After solving this optimization problem, the SVM can give probability estimates $p_i$ for each class.
 A summary of the algorithm to solve the problem \ref{prob} is documented on \cite{chang2011libsvm} while 
@@ -506,7 +508,7 @@ The logistic regression model is used to estimate the probability of a binary re
 We give first a definition of the logistic function. The logistic function $\sigma$ is a sigmoid function which takes a real input
 and outputs a value between zero and one:
 \begin{equation}
-  \sigma(t) = \frac{1}{1+e^{-t}} = \frac{e^t}{1+e^t}
+  \sigma(t) = \frac{1}{1+e^{-t}} = \frac{e^t}{1+e^t}\,. 
 \end{equation}
 Assume that we have $l$ training data points $(\mathbf{x}_i,\mathbf{y}_i)$ where
 $\mathbf{x}_i \in R^n$ and $\mathbf{y}_i=1$ or $0$. The value of $\mathbf{y}\ 1$  means that a data point belongs to one 
@@ -514,11 +516,11 @@ class and the value $0$ denotes the membership to the other class. We can treat 
 as a dichotomous variable and use the logistic regression model to estimate the probability of the membership of a
 data point $\mathbf{x}$ in the 'first' class:
 \begin{equation}
-  p(\mathbf{x}) = P(y=1|\mathbf{x}) = \sigma(g(\mathbf{x}))
+  p(\mathbf{x}) = P(y=1|\mathbf{x}) = \sigma(g(\mathbf{x}))\,,
 \end{equation}
 where $g$ is the inverse of the logistic function also called the logit function:
 \begin{equation}
-  g(\mathbf{x}) = ln(\frac{p(\mathbf{x})}{1-p(\mathbf{x})}) = \mathbf{w}_0+\mathbf{w}_1\mathbf{x}_1+.....+\mathbf{w}_n\mathbf{x}_n
+  g(\mathbf{x}) = ln(\frac{p(\mathbf{x})}{1-p(\mathbf{x})}) = \mathbf{w}_0+\mathbf{w}_1\mathbf{x}_1+.....+\mathbf{w}_n\mathbf{x}_n\,.
 \end{equation}
 The assumption that $g(\mathbf{x})$ is a linear combination of coordinates of $\mathbf{x}$ comes from linear regression.
 It remains for the logistic regression model to choose an optimal weight vector $\mathbf{w}\in R^{n+1}$. 
@@ -527,13 +529,13 @@ The method of estimation used in logistic regression is maximum likelihood. This
 parameters which maximize the probability of obtaining the observed data. In order to apply this method we construct 
 first the likelihood function as follows:
 \begin{equation}
-  l(\mathbf{w}) = \prod_{i=1}^l p(\mathbf{y}_i|\mathbf{x}_i) =  \prod_{i=1}^l p(\mathbf{x}_i)^{\mathbf{y}_i}(1-p(\mathbf{x}_i))^{1-\mathbf{y}_i}\quad .
+  l(\mathbf{w}) = \prod_{i=1}^l p(\mathbf{y}_i|\mathbf{x}_i) =  \prod_{i=1}^l p(\mathbf{x}_i)^{\mathbf{y}_i}(1-p(\mathbf{x}_i))^{1-\mathbf{y}_i}\,.
 \end{equation}
 The principle of maximum likelihood is to select the estimate of $\mathbf{w}$ which maximizes the likelihood function.
 However, it is easier mathematically to maximize the log of the likelihood function. This expression, known as log likelihood,
 is defined as:
 \begin{equation}\label{maxlg}
-  L(\mathbf{w}) = \sum_{i=1}^l {\mathbf{y}_iln[p(\mathbf{x}_i)]+(1-\mathbf{y}_i)ln[1-p(\mathbf{x}_i)]}\quad .
+  L(\mathbf{w}) = \sum_{i=1}^l {\mathbf{y}_iln[p(\mathbf{x}_i)]+(1-\mathbf{y}_i)ln[1-p(\mathbf{x}_i)]}\,.
 \end{equation}
 Maximizing the log likelihood require special mathematical software which is present in most statistical packages.
 We do not present here an algorithm for maximizing \ref{maxlg} but such a solution is known to be found.
@@ -544,10 +546,10 @@ If $p(\mathbf{z})\geq 0.5$, we classify $\mathbf{z}$ in the first class; otherwi
 the other class. Here we use the convention of letting $\mathbf{z}_0=1$, so that 
 $\mathbf{wz} = \mathbf{w}_0 + \sum_{j=1}^n \mathbf{w}_j\mathbf{z}_j$.
 \subsubsection*{$L_2$ Regularization}
-To prevent overfitting, we use a $L_2$-regularized version of logistic regression. We are using LIBLINEAR \cite{fan2008liblinear}
+To prevent overfitting, we use a $L_2$-regularized version of logistic regression (LR). We are using LIBLINEAR \cite{fan2008liblinear}
 for constructing the logistic regression model. Based on their implementation, the model solves the following optimization problem:
 \begin{equation}\label{logfinal}
-  \underset{\mathbf{w}}{min} \ \ \frac{1}{2}\mathbf{w}^2+C\sum_{i=1}^l\xi(\mathbf{w};\mathbf{x}_i;\mathbf{y}_i)
+  \underset{\mathbf{w}}{min} \ \ \frac{1}{2}\mathbf{w}^2+C\sum_{i=1}^l\xi(\mathbf{w};\mathbf{x}_i;\mathbf{y}_i)\,,
 \end{equation}
 where $\xi(\mathbf{w};\mathbf{x}_i;\mathbf{y}_i)$ is a loss function and $C\geq 0$ is the trade-off parameter
 as in the SVM model. We should note here that the data is labeled differently with $\mathbf{y}_i \in \{-1,1\}$.
@@ -556,7 +558,7 @@ As we said before the aim of the model is to maximize the log likelihood. As a l
 to minimizing the negative of the log likelihood. We calculate in this way the loss function to be minimized:
 \begin{equation}
   J(\mathbf{w}) = -ln(\prod_{i=1}^l p(\mathbf{y}_i|\mathbf{x}_i)) = - \sum_{i=1}^l ln(p(\mathbf{y}_i|\mathbf{x}_i))
-  = \sum_{i=1}^l ln(\sigma(\mathbf{y}_i\mathbf{w}\mathbf{x}_i)^{-1}) = \sum_{i=1}^l ln(1+e^{-\mathbf{y}_i\mathbf{w}\mathbf{x}_i})
+  = \sum_{i=1}^l ln(\sigma(\mathbf{y}_i\mathbf{w}\mathbf{x}_i)^{-1}) = \sum_{i=1}^l ln(1+e^{-\mathbf{y}_i\mathbf{w}\mathbf{x}_i})\,,
 \end{equation}
 
 which shows that $\xi(\mathbf{w};\mathbf{x}_i;\mathbf{y}_i) = ln(1+e^{-\mathbf{y}_i\mathbf{w}\mathbf{x}_i})$.
@@ -603,7 +605,7 @@ We combine these probability scores by a soft voting strategy. Assume that for a
 the three classifiers output respectively the three probability vectors $p_{\mathbf{z}_1},\ p_{\mathbf{z}_2},\ p_{\mathbf{z}_3}$.
 We calculate a weighted sum of these probabilities:
 \begin{equation}
-  r_\mathbf{z} = \mathbf{w}_1p_{\mathbf{z}_1} + \mathbf{w}_2p_{\mathbf{z}_2} + \mathbf{w}_3p_{\mathbf{z}_3}
+  r_\mathbf{z} = \mathbf{w}_1p_{\mathbf{z}_1} + \mathbf{w}_2p_{\mathbf{z}_2} + \mathbf{w}_3p_{\mathbf{z}_3}\,,
 \end{equation}
 where $r_\mathbf{z}$ denotes the final hypothesis for a data point $\mathbf{z}$. The predicted genre by the ensemble
 system for $\mathbf{z}$ is the index of the highest value in $r_\mathbf{z}$. The weights $\mathbf{w}_1,\
@@ -740,6 +742,106 @@ that give the best performance.
 \subsubsection*{Ensemble System Parameters}
 $\mathbf{w}_1 = 7,\ \mathbf{w}_2 = 5,\ \mathbf{w}_3 = 2$
 \subsection{Results}
+After having decided on the optimal parameters of the system, we run the cross-validation procedure
+five times (different partitions) with the agreed configuration. For each run, we report the mean classification accuracy
+and the standard deviation for the single classifiers and the ensemble system. The following tables 
+show the classification accuracy percentage results for the different classifiers and for the ensemble system. 
+% Please add the following required packages to your document preamble:
+% \usepackage{graphicx}
+\begin{table}[h]
+  \centering
+  \resizebox{\textwidth}{!}{%
+  \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+  \hline
+          & Blues & Classical & Country & Disco & Hiphop & Jazz  & Metal & Pop   & Reggae & Rock  & Total & Total Error \\ \hline
+  Trial 1 & 79    & 92.5      & 57.7    & 59.4  & 76.9   & 90    & 79    & 80    & 67     & 50    & 71.5  & 4.3         \\ \hline
+  Trial 2 & 77.9  & 92.8      & 66.2    & 61.4  & 76     & 87.8  & 84.1  & 74.6  & 73.8   & 48.3  & 72.7  & 4.9         \\ \hline
+  Trial 3 & 73.2  & 93        & 62.6    & 61.2  & 77.3   & 87.9  & 84.5  & 75.8  & 68.8   & 48.3  & 71.9  & 5.5         \\ \hline
+  Trial 4 & 80,1  & 93.5      & 62.1    & 61.1  & 77.2   & 89    & 77.8  & 75.1  & 68.8   & 51.1  & 72    & 4           \\ \hline
+  Trial 5 & 80.5  & 93.6      & 55.3    & 61.4  & 74.6   & 84.4  & 83.7  & 71.2  & 69.1   & 52.7  & 71.2  & 4.3         \\ \hline
+  Mean    & 77.65 & 93.08     & 60.78   & 60.9  & 76.4   & 87.82 & 81.82 & 75.34 & 69.5   & 50.08 & 71.86 & 4.6         \\ \hline
+  \end{tabular}%
+  }
+  \caption{Classification Accuracy for Logistic Regression}
+  \label{logtable}
+  \end{table}
+  % Please add the following required packages to your document preamble:
+% \usepackage{graphicx}
+\begin{table}[H]
+  \centering
+  \resizebox{\textwidth}{!}{%
+  \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+  \hline
+          & Blues & Classical & Country & Disco & Hiphop & Jazz  & Metal & Pop   & Reggae & Rock  & Total & Total Error \\ \hline
+  Trial 1 & 79.7  & 92        & 74.3    & 70.8  & 73.6   & 88.9  & 76.7  & 85.1  & 67.9   & 51.3  & 74.2  & 3.9         \\ \hline
+  Trial 2 & 80    & 90.1      & 67.5    & 65.1  & 77     & 89.8  & 75.8  & 85.7  & 72.7   & 54    & 73.7  & 4.8         \\ \hline
+  Trial 3 & 78.6  & 93.7      & 72.3    & 72.1  & 80.7   & 88.9  & 78.3  & 84.2  & 73.9   & 59.1  & 75.3  & 4.2         \\ \hline
+  Trial 4 & 78.3  & 94.6      & 70.3    & 67.9  & 75.6   & 89.5  & 76.8  & 82.1  & 68.9   & 55.5  & 74.3  & 3.9         \\ \hline
+  Trial 5 & 78    & 92.6      & 69.7    & 67.9  & 80.4   & 87.2  & 79.3  & 79.6  & 70     & 55.5  & 74.2  & 4.3         \\ \hline
+  Mean    & 78.92 & 92.6      & 70.82   & 68.76 & 77.46  & 88.86 & 77.38 & 83.34 & 70.68  & 55.08 & 74.34 & 4.22        \\ \hline
+  \end{tabular}%
+  }
+  \caption{Classification Accuracy for SVMs}
+  \label{svmtable}
+  \end{table}
+  % Please add the following required packages to your document preamble:
+% \usepackage{graphicx}
+\begin{table}[H]
+  \centering
+  \resizebox{\textwidth}{!}{%
+  \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+  \hline
+          & Blues & Classical & Country & Disco & Hiphop & Jazz & Metal & Pop   & Reggae & Rock  & Total & Total Error \\ \hline
+  Trial 1 & 79.7  & 78.1      & 62.8    & 68.7  & 82     & 82.2 & 69.6  & 80.4  & 80.5   & 60.4  & 73.6  & 4.1         \\ \hline
+  Trial 2 & 81.2  & 80.8      & 63.7    & 73.2  & 83.6   & 82.7 & 69.9  & 75.5  & 79.7   & 61.5  & 74.1  & 3.3         \\ \hline
+  Trial 3 & 78    & 79.6      & 58.9    & 76.7  & 84.2   & 83.1 & 69.3  & 73.5  & 77.1   & 60.6  & 72.9  & 3.7         \\ \hline
+  Trial 4 & 76    & 80.3      & 64.8    & 73.4  & 82.5   & 84.8 & 67.9  & 79.5  & 75.6   & 55.5  & 73.3  & 3.4         \\ \hline
+  Trial 5 & 78.2  & 82.8      & 57.2    & 74    & 79.1   & 85.7 & 69.8  & 76.7  & 80.1   & 51.8  & 73    & 4.4         \\ \hline
+  Mean    & 78.62 & 80.32     & 61.48   & 73.2  & 82.28  & 83.7 & 69.3  & 77.12 & 78.6   & 57.96 & 73.38 & 3.78        \\ \hline
+  \end{tabular}%
+  }
+  \caption{Classification Accuracy for ESNs}
+  \label{esntable}
+  \end{table}
+  % Please add the following required packages to your document preamble:
+% \usepackage{graphicx}
+\begin{table}[H]
+  \centering
+  \resizebox{\textwidth}{!}{%
+  \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+  \hline
+          & Blues & Classical & Country & Disco & Hiphop & Jazz  & Metal & Pop   & Reggae & Rock & Total & Total Error \\ \hline
+  Trial 1 & 85.1  & 89.5      & 70.7    & 76.9  & 80.1   & 92.7  & 78.8  & 83.5  & 78.3   & 60   & 78.3  & 3.4         \\ \hline
+  Trial 2 & 81.9  & 90.1      & 74.7    & 80.5  & 81.8   & 93.8  & 80.2  & 77.4  & 79.6   & 62   & 79.3  & 4.8         \\ \hline
+  Trial 3 & 83.8  & 91.8      & 74      & 80.3  & 86.4   & 92.3  & 82    & 81.6  & 78.8   & 60.6 & 80.2  & 3.6         \\ \hline
+  Trial 4 & 84.7  & 89.9      & 73.9    & 78.9  & 81.6   & 89.3  & 80.6  & 82.1  & 78.5   & 64.7 & 79.5  & 3.5         \\ \hline
+  Trial 5 & 83.6  & 92.2      & 68.8    & 79.3  & 80.5   & 89    & 84.5  & 81.6  & 75.3   & 66.2 & 79.5  & 3           \\ \hline
+          & 83.82 & 90.7      & 72.42   & 79.18 & 82.08  & 91.42 & 81.22 & 81.24 & 78.1   & 62.7 & 79.36 & 3.66        \\ \hline
+  \end{tabular}%
+  }
+  \caption{Classification Accuracy for the Ensemble System}
+  \label{ensembletable}
+  \end{table}
+  From the results, we can see that the single classifiers perform not so differently from
+  each other. The SVM model has the best performance with mean accuracy $74.34\%$ and standard deviation
+  $4.22\%$. The ESN performance is about $1\%$ worse but the network model is more stable 
+  with standard deviation $3.78\%$. Logistic regression model is the worst performing model with
+  mean accuracy $71.86\%$ and standard deviation $4.6\%$. 
+  
+  One explanation for the worse performance
+  of the LR model could be that the data is non-linearly separable. This hypothesis is supported also
+  by the fact that SVMs with radial basis kernel function performed better than linear SVMs.
+  Another observation is that the SVM and LR models perform differently from the ESN model on certain genres.
+  This difference could be due to the different feature
+  extraction methods that were applied and the underlying difference in how the models work.
+  The best predicted genre by the SVM and LR models is the classical music genre while the ESN model predicts
+  jazz and hiphop the best.
+  
+  The ensemble system model is the most superior one with mean accuracy $79.36\%$ and
+  standard deviation $3.66\%$. The best predicted genres by the ensemble system are jazz and classical music.
+  This experiment shows how applying an ensemble learning approach improves the model performance
+  by combining the strengths of the single classifiers. 
+   
 \section{Conclusions}
 \subsection{Future Work}
 \nocite{*}
